@@ -1,0 +1,820 @@
+/* Root variables for theme colors */
+:root {
+  --bg-color: #000000; /* Pure black for the main background */
+  --text-color: #ffffff;
+  --accent-color: #ff416c;
+  --card-bg: #1e1e1e;
+  --input-bg: #2a2a2a;
+  --button-hover: #ff2e58;
+  --comment-bg: #282828;
+  --reply-bg: #353535;
+  --header-bg: #000000; /* Pure black for header */
+  --scrollbar-thumb: #000000; /* Pure black thumb */
+  --scrollbar-track: #1a1a1a; /* Very dark grey for track */
+  --dark-red-hover: #8B0000; /* Dark red on hover */
+}
+
+/* Light theme specific variables */
+[data-theme="light"] {
+  --bg-color: #f0f0f0;
+  --text-color: #333333;
+  --card-bg: #ffffff;
+  --input-bg: #e0e0e0;
+  --comment-bg: #f5f5f5;
+  --reply-bg: #e8e8e8;
+  --header-bg: #f5f5f5;
+  --scrollbar-thumb: #bbb;
+  --scrollbar-track: #eee;
+}
+
+/* Body base styles */
+body {
+  margin: 0;
+  /* यहां ग्रेडिएंट बैकग्राउंड शामिल किया गया है */
+  background: linear-gradient(to right, #2c004f, #4f002c); /* इमेज से मिलते-जुलते रंगों का ग्रेडिएंट */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+  color: var(--text-color);
+  padding: 0;
+  transition: background-color 0.3s, color 0.3s;
+  line-height: 1.6;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+    
+/* Custom scrollbar styles for WebKit browsers */
+body::-webkit-scrollbar {
+  width: 12px; /* Wider scrollbar for better visibility */
+}
+body::-webkit-scrollbar-track {
+  background: var(--scrollbar-track); /* Darker track */
+  border-radius: 10px;
+}
+body::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb); /* Pure black thumb */
+  border-radius: 10px;
+  border: 3px solid var(--bg-color); /* Border to match background */
+}
+body::-webkit-scrollbar-thumb:hover {
+  background: var(--dark-red-hover); /* Dark red on hover */
+}
+
+/* Main header styles */
+.main-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px 20px;
+  /* यहां हेडर पर भी ग्रेडिएंट बैकग्राउंड शामिल किया गया है */
+  background: linear-gradient(to right, #2c004f, #4f002c); /* इमेज से मिलते-जुलते रंगों का ग्रेडिएंट */
+  border-bottom: none; 
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+/* Logo container styles */
+.logo-container {
+  flex-grow: 0;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+}
+
+.logo-container a {
+  display: inline-block;
+  line-height: 0;
+}
+
+.logo-container img {
+  display: block;
+  width: 450px;
+  height: auto;
+  max-height: 120px;
+  margin: 0 auto;
+  /* लोगो पर हॉवर इफेक्ट हटाने के लिए ट्रांजीशन और ट्रांसफॉर्म को हटा दिया गया है */
+  transition: none; /* ट्रांजीशन हटा दिया गया */
+}
+    
+/* लोगो पर हॉवर इफेक्ट हटाने के लिए */
+.logo-container img:hover {
+  transform: none; /* कोई ट्रांसफॉर्म नहीं */
+}
+
+/* Overlay styles (if used) */
+.overlay {
+  display: none;
+}
+
+/* Page title styles */
+h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  margin-top: 180px;
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+h1 a {
+  text-decoration: none;
+  color: var(--accent-color);
+  font-size: 2.5em;
+  font-weight: bold;
+  text-shadow: 0 0 10px rgba(255, 65, 108, 0.7);
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+/* Main content containers styles */
+.contact-container, .comments-section {
+  background-color: var(--card-bg);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(255, 65, 108, 0.4);
+  max-width: 600px;
+  width: 90%;
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 30px; 
+}
+
+/* Section heading styles */
+h2 {
+  color: var(--accent-color);
+  margin-bottom: 20px;
+  font-size: 2em;
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+/* Form group styles */
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: var(--text-color);
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+/* Input and textarea styles */
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group textarea,
+.reply-form-container input[type="text"],
+.reply-form-container input[type="email"],
+.reply-form-container textarea {
+  width: calc(100% - 20px);
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease;
+  resize: vertical; 
+  margin-bottom: 10px; 
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group textarea:focus,
+.reply-form-container input:focus,
+.reply-form-container textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent-color);
+}
+
+.form-group textarea, .reply-form-container textarea {
+  min-height: 80px; 
+}
+
+/* Submit button styles */
+.submit-button, .submit-reply-button {
+  display: inline-block;
+  padding: 15px 30px;
+  background-color: var(--accent-color);
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 1.2em;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  border: none; 
+  margin-top: 10px; 
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.submit-button:hover, .submit-reply-button:hover {
+  background-color: var(--button-hover);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Back button styles */
+.back-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #555;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 1em;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.back-button:hover {
+  background-color: #777;
+}
+
+/* Footer styles */
+footer {
+  width: 100%;
+  text-align: center;
+  margin-top: 50px;
+  font-size: 0.9em;
+  color: #888;
+  padding-top: 20px;
+  border-top: 1px solid #333;
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+/* Custom modal overlay styles */
+.custom-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* Slightly more transparent */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; 
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  backdrop-filter: blur(5px); /* Blur effect for background */
+  -webkit-backdrop-filter: blur(5px); /* Safari support */
+}
+
+.custom-modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Custom modal content styles */
+.custom-modal-content {
+  background-color: var(--card-bg); /* Use card-bg variable */
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(255, 65, 108, 0.5);
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  color: var(--text-color); /* Use text-color variable */
+  transform: translateY(-20px);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  max-height: 80vh; 
+  overflow-y: auto; 
+  /* Custom scrollbar for modal content */
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: var(--accent-color) var(--input-bg); /* For Firefox */
+}
+
+/* Webkit scrollbar for custom modal content */
+.custom-modal-content::-webkit-scrollbar {
+  width: 10px;
+}
+
+.custom-modal-content::-webkit-scrollbar-track {
+  background: var(--input-bg); /* Darker track for modal */
+  border-radius: 10px;
+}
+
+.custom-modal-content::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb); /* Pure black thumb */
+  border-radius: 10px;
+  border: 2px solid var(--card-bg); /* Border to match modal background */
+}
+
+.custom-modal-content::-webkit-scrollbar-thumb:hover {
+  background: var(--dark-red-hover); /* Dark red on hover */
+}
+
+
+.custom-modal-overlay.active .custom-modal-content {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.custom-modal-content h3 {
+  color: var(--accent-color);
+  margin-bottom: 20px;
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.custom-modal-content p {
+  margin-bottom: 25px;
+  line-height: 1.5;
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.custom-modal-content .modal-buttons button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 0 8px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.custom-modal-content .modal-ok-btn {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.custom-modal-content .modal-ok-btn:hover {
+  background-color: var(--button-hover);
+  transform: translateY(-2px);
+}
+
+.custom-modal-content .modal-cancel-btn {
+  background-color: #444;
+  color: white;
+}
+
+.custom-modal-content .modal-cancel-btn:hover {
+  background-color: #555;
+  transform: translateY(-2px);
+}
+
+/* Comments section styles */
+.comments-section {
+  text-align: left; 
+}
+
+.comments-section h3 {
+  text-align: center; 
+  margin-bottom: 25px;
+  font-size: 1.8em;
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+/* Individual comment item styles */
+.comment-item {
+  background-color: var(--comment-bg);
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-left: 5px solid var(--accent-color);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* Comment header styles */
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 5px;
+}
+
+.comment-header strong {
+  color: var(--text-color);
+  font-size: 1.1em;
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.comment-header .comment-email {
+  font-size: 0.9em;
+  color: #bbb;
+  margin-left: 10px;
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.comment-header .comment-date {
+    font-size: 0.8em;
+    color: #888;
+    white-space: nowrap; 
+    margin-left: auto; 
+    font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+/* Comment message styles */
+.comment-message {
+  margin-top: 10px;
+  font-size: 1em;
+  color: var(--text-color);
+  word-wrap: break-word; 
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+/* Comment actions styles */
+.comment-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    align-items: center;
+}
+
+.comment-actions button {
+    background-color: transparent;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 0.9em;
+    padding: 5px 8px;
+    border-radius: 5px;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.comment-actions button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.comment-actions button.active-reaction {
+    color: var(--accent-color);
+}
+
+.comment-actions button.like-button:hover {
+    color: limegreen;
+}
+
+.comment-actions button.dislike-button:hover {
+    color: red;
+}
+
+/* Reply button styles */
+.reply-button {
+    background-color: #555 !important;
+    color: white !important;
+}
+.reply-button:hover {
+    background-color: #777 !important;
+}
+
+/* Reply form container styles */
+.reply-form-container {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: var(--reply-bg);
+    border-radius: 10px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.reply-form-container input,
+.reply-form-container textarea {
+    margin-bottom: 5px;
+}
+
+/* Submit and cancel reply button styles */
+.submit-reply-button, .cancel-reply-button {
+    padding: 8px 15px !important;
+    font-size: 0.9em !important;
+    margin-top: 5px !important;
+    font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.cancel-reply-button {
+    background-color: #777 !important;
+}
+.cancel-reply-button:hover {
+    background-color: #999 !important;
+}
+
+/* Replies list styles */
+.replies-list {
+    margin-left: 20px; 
+    margin-top: 15px;
+    padding-left: 10px;
+    border-left: 2px solid rgba(255, 65, 108, 0.5); 
+}
+
+/* Individual reply item styles */
+.reply-item {
+    background-color: var(--reply-bg);
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    position: relative; 
+}
+.reply-item:last-child {
+    margin-bottom: 0; 
+}
+
+.reply-item .comment-header {
+    margin-bottom: 3px;
+}
+
+.reply-item .comment-message {
+    font-size: 0.95em;
+    margin-top: 5px;
+    font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.reply-item .comment-actions {
+    margin-top: 5px;
+}
+
+/* No comments message styles */
+.no-comments {
+  text-align: center;
+  color: #888;
+  margin-top: 20px;
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+/* Laptop/Tablet (Medium Screens) adjustments */
+@media screen and (max-width: 1024px) {
+    body {
+        font-size: 15px; /* Slightly reduced base font size */
+    }
+    .main-header {
+        padding: 0px; /* Keep consistent */
+    }
+    .logo-container img {
+        width: 350px; /* Slightly smaller logo */
+        max-height: 100px;
+    }
+    h1 {
+        margin-top: 150px; /* Adjusted margin-top for fixed header */
+        font-size: 2.2em; /* Slightly reduced font size */
+    }
+    h1 a {
+        font-size: 2.2em; /* Slightly reduced font size */
+    }
+    .contact-container, .comments-section {
+        padding: 25px; /* Reduced padding */
+        max-width: 550px; /* Slightly reduced max-width */
+        margin-top: 25px; /* Adjusted margin */
+        margin-bottom: 25px; /* Adjusted margin */
+    }
+    h2 {
+        font-size: 1.8em; /* Slightly reduced font size */
+        margin-bottom: 18px; /* Slightly reduced margin */
+    }
+    .form-group {
+        margin-bottom: 18px; /* Slightly reduced margin */
+    }
+    .form-group label {
+        margin-bottom: 6px; /* Slightly reduced margin */
+        font-size: 0.92em; /* Slightly reduced font size */
+    }
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group textarea,
+    .reply-form-container input[type="text"],
+    .reply-form-container input[type="email"],
+    .reply-form-container textarea {
+        width: calc(100% - 16px); /* Adjusted width */
+        padding: 10px; /* Reduced padding */
+        font-size: 0.95em; /* Slightly reduced font size */
+        margin-bottom: 8px; /* Slightly reduced margin */
+    }
+    .form-group textarea, .reply-form-container textarea {
+        min-height: 70px; /* Slightly reduced min-height */
+    }
+    .submit-button, .submit-reply-button {
+        padding: 12px 25px; /* Slightly reduced padding */
+        font-size: 1.1em; /* Slightly reduced font size */
+        margin-top: 8px; /* Slightly reduced margin */
+    }
+    .back-button {
+        padding: 9px 18px; /* Slightly reduced padding */
+        font-size: 0.95em; /* Slightly reduced font size */
+        margin-top: 18px; /* Slightly reduced margin */
+    }
+    footer {
+        margin-top: 40px; /* Slightly reduced margin */
+        font-size: 0.85em; /* Slightly reduced font size */
+        padding-top: 15px; /* Slightly reduced padding */
+    }
+    .custom-modal-content {
+        padding: 25px; /* Slightly reduced padding */
+        max-width: 350px; /* Slightly reduced max-width */
+    }
+    .custom-modal-content h3 {
+        font-size: 1.3em; /* Slightly reduced font size */
+        margin-bottom: 15px; /* Slightly reduced margin */
+    }
+    .custom-modal-content p {
+        font-size: 1em; /* Slightly reduced font size */
+        margin-bottom: 20px; /* Slightly reduced margin */
+    }
+    .custom-modal-content .modal-buttons button {
+        padding: 10px 20px; /* Slightly reduced padding */
+        font-size: 0.95em; /* Slightly reduced font size */
+        margin: 0 6px; /* Slightly reduced margin */
+    }
+    .comments-section h3 {
+        font-size: 1.6em; /* Slightly reduced font size */
+        margin-bottom: 20px; /* Slightly reduced margin */
+    }
+    .comment-item {
+        padding: 12px; /* Slightly reduced padding */
+        margin-bottom: 12px; /* Slightly reduced margin */
+    }
+    .comment-header strong {
+        font-size: 1.05em; /* Slightly reduced font size */
+    }
+    .comment-header .comment-email {
+        font-size: 0.85em; /* Slightly reduced font size */
+    }
+    .comment-message {
+        font-size: 0.95em; /* Slightly reduced font size */
+    }
+    .comment-actions button {
+        font-size: 0.85em; /* Slightly reduced font size */
+        padding: 4px 7px; /* Slightly reduced padding */
+    }
+    .reply-form-container {
+        padding: 12px; /* Slightly reduced padding */
+        margin-top: 12px; /* Slightly reduced margin */
+    }
+    .submit-reply-button, .cancel-reply-button {
+        padding: 7px 14px !important; /* Slightly reduced padding */
+        font-size: 0.85em !important; /* Slightly reduced font size */
+        margin-top: 4px !important; /* Slightly reduced margin */
+    }
+    .replies-list {
+        margin-left: 18px; /* Slightly reduced margin */
+        margin-top: 12px; /* Slightly reduced margin */
+        padding-left: 9px; /* Slightly reduced padding */
+    }
+    .reply-item {
+        padding: 9px; /* Slightly reduced padding */
+        margin-bottom: 9px; /* Slightly reduced margin */
+    }
+    .reply-item .comment-message {
+        font-size: 0.9em; /* Slightly reduced font size */
+    }
+    .no-comments {
+        margin-top: 18px; /* Slightly reduced margin */
+    }
+}
+
+/* Mobile (Small Screens) adjustments */
+@media screen and (max-width: 768px) {
+    body {
+        font-size: 13px; /* Further reduced base font size */
+    }
+    .main-header {
+        padding: 3px; /* Further reduced padding */
+    }
+    .logo-container img {
+        width: 110px; /* Further reduced logo width */
+        height: 90px; /* Further reduced logo height */
+        transform: scaleX(2.3); /* Adjusted scale for smaller width */
+    }
+    h1 {
+        margin-top: 150px; /* Adjusted margin-top for fixed header */
+        font-size: 2em; /* Adjusted font size */
+    }
+    h1 a {
+        font-size: 2em; /* Adjusted font size */
+    }
+    .contact-container, .comments-section {
+        padding: 15px; /* Reduced padding */
+        margin-top: 15px; /* Adjusted margin */
+        margin-bottom: 15px; /* Adjusted margin */
+    }
+    h2 {
+        font-size: 1.5em; /* Adjusted font size */
+        margin-bottom: 15px; /* Reduced margin */
+    }
+    .form-group {
+        margin-bottom: 15px; /* Reduced margin */
+    }
+    .form-group label {
+        margin-bottom: 5px; /* Reduced margin */
+        font-size: 0.9em; /* Reduced font size */
+    }
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group textarea,
+    .reply-form-container input[type="text"],
+    .reply-form-container input[type="email"],
+    .reply-form-container textarea {
+        width: calc(100% - 10px); /* Adjusted width */
+        padding: 10px; /* Reduced padding */
+        font-size: 0.9em; /* Reduced font size */
+        margin-bottom: 8px; /* Reduced margin */
+    }
+    .form-group textarea, .reply-form-container textarea {
+        min-height: 60px; /* Reduced min-height */
+    }
+    .submit-button, .submit-reply-button {
+        padding: 10px 20px; /* Reduced padding */
+        font-size: 1em; /* Reduced font size */
+        margin-top: 8px; /* Reduced margin */
+    }
+    .back-button {
+        padding: 8px 15px; /* Reduced padding */
+        font-size: 0.9em; /* Reduced font size */
+        margin-top: 15px; /* Reduced margin */
+    }
+    footer {
+        margin-top: 20px; /* Reduced margin */
+        font-size: 0.8em; /* Reduced font size */
+        padding-top: 10px; /* Reduced padding */
+    }
+    .custom-modal-content {
+        padding: 15px; /* Reduced padding */
+        max-width: 300px; /* Reduced max-width */
+    }
+    .custom-modal-content h3 {
+        font-size: 1.1em;
+        margin-bottom: 10px;
+    }
+    .custom-modal-content p {
+        font-size: 0.85em;
+        margin-bottom: 10px;
+    }
+    .custom-modal-content .modal-buttons button {
+        padding: 8px 15px;
+        font-size: 0.85em;
+        margin: 0 4px;
+    }
+    .comments-section h3 {
+        font-size: 1.5em; /* Reduced font size */
+        margin-bottom: 20px; /* Reduced margin */
+    }
+    .comment-item {
+        padding: 10px; /* Reduced padding */
+        margin-bottom: 10px; /* Reduced margin */
+    }
+    .comment-header strong {
+        font-size: 1em; /* Reduced font size */
+    }
+    .comment-header .comment-email {
+        font-size: 0.8em; /* Reduced font size */
+    }
+    .comment-message {
+        font-size: 0.9em; /* Reduced font size */
+    }
+    .comment-actions button {
+        font-size: 0.8em; /* Reduced font size */
+        padding: 4px 6px; /* Reduced padding */
+    }
+    .reply-form-container {
+        padding: 10px; /* Reduced padding */
+        margin-top: 10px; /* Reduced margin */
+    }
+    .submit-reply-button, .cancel-reply-button {
+        padding: 7px 12px !important; /* Reduced padding */
+        font-size: 0.8em !important; /* Reduced font size */
+        margin-top: 4px !important; /* Reduced margin */
+    }
+    .replies-list {
+        margin-left: 15px; /* Reduced margin */
+        margin-top: 10px; /* Reduced margin */
+        padding-left: 8px; /* Reduced padding */
+    }
+    .reply-item {
+        padding: 8px; /* Reduced padding */
+        margin-bottom: 8px; /* Reduced margin */
+    }
+    .reply-item .comment-message {
+        font-size: 0.85em; /* Reduced font size */
+    }
+    .no-comments {
+        margin-top: 15px; /* Reduced margin */
+    }
+}
+
+/* Removed sidebar-active blur/transform as per user request */

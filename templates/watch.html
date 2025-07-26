@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Updated meta viewport for no zoom and fixed width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>Download Anime - ZenkaiWorld</title>
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/ZnxPMLYj/Icon-ASHRO-ANIME.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Alegreya Font Added -->
+    <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='watch.css') }}">
+
+</head>
+<body data-theme="dark">
+    <div class="main-header">
+        <div class="logo-container">
+            <a href="/"> <!-- Changed from Home.html to / -->
+                <img src="https://i.postimg.cc/rskz7XK2/Logo.png" alt="ZenkaiWorld Logo">
+            </a>
+        </div>
+    </div>
+
+    <main class="container">
+        <h2 id="animeTitle"></h2>
+        <!-- Uploader Name یہاں دکھایا جائے گا -->
+        <p id="uploaderName" style="color: #888; font-size: 0.9em; margin-bottom: 15px;"></p>
+        <p id="animeReview" style="font-style: italic; color: #ccc; margin-bottom: 15px;"></p>
+
+        <div id="trailerSection" style="display: none; margin-bottom: 20px; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto;">
+            <h3>Trailer</h3>
+            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+                <!-- Iframe for YouTube trailer. Its src will be set by JavaScript with parameters. -->
+                <iframe id="animeTrailerFrame" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="" frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                </iframe>
+            </div>
+            <div id="trailerErrorMessage" style="color: red; margin-top: 10px; display: none;">
+                ٹریلر لوڈ نہیں ہو سکا یا دستیاب نہیں۔
+            </div>
+        </div>
+
+        <a id="downloadLink1080p" class="download-button" href="#" target="_blank">Download 1080p</a>
+        <a id="downloadLink720p" class="download-button" href="#" target="_blank" style="display: none;">Download 720p</a>
+
+        <button onclick="showNotice()" class="back-button" style="background-color: #007bff; margin-left: 10px;">Notice</button>
+        <a href="/" class="back-button">Go Back</a> <!-- Changed from Home.html to / -->
+    </main>
+
+    <footer>
+        All anime Hindi dubbed in high quality And i upload only hindi dub Anime.
+    </footer>
+
+    <div id="noticeModal" class="custom-modal-overlay">
+        <div class="custom-modal-content notice-modal-content">
+            <h3 id="noticeTitle">Important Notice from ZenkaiWorld!</h3>
+            <div id="noticeContent">
+                <p>Dear valued users, this is an important notice. We welcome you to ZenkaiWorld, where you will find the best and latest collection of Hindi-dubbed anime. We strive to provide you with a seamless viewing experience.</p>
+
+                <h4>Key Points:</h4>
+                <ul>
+                    <li><strong>Updated Anime Collection:</strong> We regularly update our library with new and popular anime. Stay tuned!</li>
+                    <li><strong>Quality and Performance:</strong> Our goal is to provide the best video quality and fast loading. If you experience any buffering or low quality, please check your internet connection.</li>
+                    <li><strong>Legal Disclaimer:</strong> All content on our website is for informational and educational purposes only. We do not support any copyright infringement.</li>
+                    <li><strong>Future Updates:</strong> We are continuously working to improve our service and add new features. Thank you for your continued support!</li>
+                </ul>
+
+                <p>This download button is 100% real and safe. It will directly take you to the original anime file without any tricks or fake links.<br><br>
+                We know that some websites add fake download buttons to mislead people. But here on <strong>ZenkaiWorld</strong>, we promise clear and honest access.<br><br>
+                This message is verified to protect your experience from fake download traps. Enjoy safely! 🔔 <strong>Note:</strong> Sometimes, some anime files may expire or become corrupted. <br>
+                If you face any issues, please let us know in the comments section or contact me directly. <br>
+                This is my first time managing such a platform, so I sincerely apologize for any inconvenience. <br>
+                Thank you for your understanding.</p>
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-ok-btn" onclick="hideNotice()">Understood</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Base URL for your Flask backend API
+        const API_BASE_URL = 'http://127.0.0.1:5000'; // Local development URL
+
+        let noticeModal; // Reference to the notice modal element
+
+        // Function to escape HTML characters to prevent XSS
+        function escapeHTML(str) {
+            const div = document.createElement('div');
+            div.appendChild(document.createTextNode(str));
+            return div.innerHTML;
+        }
+
+        // Placeholder for sortAnime function (not used on this page)
+        window.sortAnime = function(order) {
+            console.log("Sorting not implemented on this page.");
+        };
+
+        // Function to fetch anime details by ID from Flask backend
+        async function fetchAnimeDetails(animeId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/anime/${animeId}`); 
+                if (!response.ok) {
+                    const errorText = await response.text(); 
+                    let errorMessage = `Network response was not ok. Status: ${response.status} ${response.statusText}`;
+                    try {
+                        const errorJson = JSON.parse(errorText);
+                        errorMessage = errorJson.error || errorMessage;
+                    } catch (e) {
+                        errorMessage = `Server error: ${errorText || response.statusText}`;
+                    }
+                    throw new Error(errorMessage);
+                }
+                const data = await response.json();
+                return data;
+            } catch (err) {
+                console.error('Error fetching anime details:', err.message);
+                // Fallback to URL parameters if API fails (for compatibility)
+                const urlParams = new URLSearchParams(window.location.search);
+                return {
+                    title: urlParams.get('anime') || 'Anime Title Not Available',
+                    description: 'Anime information could not be found via API. Displaying fallback data.',
+                    review: urlParams.get('review') || 'No Review',
+                    download1080p: urlParams.get('download_url_1080p') || '#',
+                    download720p: urlParams.get('download_url_720p') || null,
+                    trailerUrl: urlParams.get('trailer_url') || null,
+                    uploader_name: urlParams.get('uploader_name') || 'Unknown' // Fallback for uploader name
+                };
+            }
+        }
+
+        // DOMContentLoaded event listener to load anime details
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const animeId = urlParams.get('anime_id'); // Get anime_id from URL
+
+            const titleElement = document.getElementById('animeTitle');
+            const uploaderNameElement = document.getElementById('uploaderName'); // New element for uploader name
+            const animeReviewElement = document.getElementById('animeReview'); // Renamed from reviewElement
+            const downloadLink1080pElement = document.getElementById('downloadLink1080p');
+            const downloadLink720pElement = document.getElementById('downloadLink720p');
+            const trailerSection = document.getElementById('trailerSection');
+            const animeTrailerFrame = document.getElementById('animeTrailerFrame');
+            const trailerErrorMessage = document.getElementById('trailerErrorMessage');
+            noticeModal = document.getElementById("noticeModal"); // Initialize noticeModal
+
+            let animeDetails = {};
+            if (animeId) {
+                animeDetails = await fetchAnimeDetails(animeId);
+            } else {
+                // Fallback for direct access without ID or if ID is missing
+                animeDetails = {
+                    title: urlParams.get('anime') || 'Anime Title Not Available',
+                    description: 'Anime information could not be found. Please go back and try again.',
+                    review: urlParams.get('review') || 'No Review',
+                    download1080p: urlParams.get('download_url_1080p') || '#',
+                    download720p: urlParams.get('download_url_720p') || null,
+                    trailerUrl: urlParams.get('trailer_url') || null,
+                    uploader_name: urlParams.get('uploader_name') || 'Unknown' // Fallback for uploader name
+                };
+            }
+
+            // Update page content with fetched anime details
+            if (animeDetails.title) {
+                titleElement.textContent = escapeHTML(animeDetails.title);
+                // Removed the descriptionElement update as per request
+            } else {
+                titleElement.textContent = 'Anime Title Not Available';
+                // Removed the descriptionElement update as per request
+                downloadLink1080pElement.style.display = 'none';
+                downloadLink720pElement.style.display = 'none';
+            }
+
+            // Display Uploader Name
+            if (animeDetails.uploader_name && animeDetails.uploader_name.trim() !== '') {
+                uploaderNameElement.textContent = `Uploaded by: ${escapeHTML(animeDetails.uploader_name)}`;
+                uploaderNameElement.style.display = 'block';
+            } else {
+                uploaderNameElement.style.display = 'none';
+            }
+
+            if (animeDetails.review && animeDetails.review !== 'null' && animeDetails.review.trim() !== '') {
+                animeReviewElement.textContent = escapeHTML(animeDetails.review);
+                animeReviewElement.style.display = 'block';
+            } else {
+                animeReviewElement.style.display = 'none';
+            }
+
+            // Logic for displaying trailer with YouTube embed parameters
+            if (animeDetails.trailerUrl && animeDetails.trailerUrl !== 'null' && animeDetails.trailerUrl.trim() !== '') {
+                let decodedTrailerUrl = animeDetails.trailerUrl;
+                
+                // Ensure the base URL is clean (remove any existing ?si= or other parameters)
+                const youtubeEmbedRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/embed\/|youtu\.be\/)([\w-]{11})(?:\S+)?/i;
+                const match = decodedTrailerUrl.match(youtubeEmbedRegex);
+
+                if (match) {
+                    // Reconstruct the URL with only the video ID
+                    const videoId = match[4];
+                    decodedTrailerUrl = `https://www.youtube.com/embed/${videoId}`;
+                }
+
+                // Add YouTube embed parameters to minimize unwanted elements
+                const params = 'rel=0&showinfo=0&modestbranding=1&autoplay=0&loop=0&playsinline=1&enablejsapi=1';
+                
+                // Append parameters to the URL
+                if (decodedTrailerUrl.includes('?')) {
+                    decodedTrailerUrl += '&' + params;
+                } else {
+                    decodedTrailerUrl += '?' + params;
+                }
+
+                animeTrailerFrame.src = decodedTrailerUrl;
+                trailerSection.style.display = 'block';
+                trailerErrorMessage.style.display = 'none';
+            } else {
+                trailerSection.style.display = 'none';
+                trailerErrorMessage.style.display = 'block';
+            }
+
+            // Set download links and their visibility
+            if (animeDetails.download1080p && animeDetails.download1080p !== '#') {
+                downloadLink1080pElement.href = animeDetails.download1080p;
+                downloadLink1080pElement.style.display = 'inline-block';
+            } else {
+                downloadLink1080pElement.href = '#';
+                downloadLink1080pElement.textContent = '1080p Download Link Not Available';
+                downloadLink1080pElement.style.backgroundColor = '#dc3545'; // Indicate unavailability
+            }
+
+            if (animeDetails.download720p && animeDetails.download720p !== '#') {
+                downloadLink720pElement.href = animeDetails.download720p;
+                downloadLink720pElement.style.display = 'inline-block';
+            } else {
+                downloadLink720pElement.style.display = 'none';
+            }
+
+            // Set default theme
+            document.body.setAttribute('data-theme', 'dark');
+        });
+
+        // Function to show the notice modal
+        function showNotice() {
+            if (noticeModal) {
+                noticeModal.classList.add('active');
+            }
+        }
+
+        // Function to hide the notice modal
+        function hideNotice() {
+            if (noticeModal) {
+                noticeModal.classList.remove('active');
+            }
+        }
+    </script>
+    <script>
+    // Prevent context menu (right-click)
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+
+    // Prevent developer tools access via keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+      if (
+        e.key === "F12" ||
+        (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+        (e.ctrlKey && e.shiftKey && e.key === 'J') ||
+        (e.ctrlKey && e.key === 'U') ||
+        (e.metaKey && e.altKey && e.key === 'i') ||
+        (e.metaKey && e.altKey && e.key === 'j') ||
+        (e.metaKey && e.altKey && e.key === 'c')
+      ) {
+        e.preventDefault();
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.metaKey && e.altKey) {
+            if (e.key === 'c' || e.key === 'i' || e.key === 'j') {
+                e.preventDefault();
+            }
+        }
+    });
+    </script>
+</body>
+</html>

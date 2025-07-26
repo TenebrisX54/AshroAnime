@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- Favicon updated to new URL -->
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/ZnxPMLYj/Icon-ASHRO-ANIME.png">
+  <title>Admin Panel - ZenkaiWorld</title> <!-- Title remains for browser tab -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Alegreya Font Added -->
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+  <!-- Linking the external admin.css file -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='Admin_Moaz.css') }}">
+
+</head>
+<body data-theme="dark">
+  <div class="main-header">
+    <div class="logo-container">
+      <a href="/">
+        <!-- Logo updated to new URL -->
+        <img src="https://i.postimg.cc/rskz7XK2/Logo.png" alt="ZenkaiWorld Logo">
+      </a>
+    </div>
+    </div>
+
+  <!-- Removed h1 "Admin Panel - ZenkaiWorld" -->
+
+  <main class="admin-container">
+    <h2>Welcome, Admin!</h2>
+    <p>Use the options below to manage anime content.</p>
+
+    <div class="admin-actions">
+      <button onclick="showSection('upload')">Upload Anime</button>
+      <button onclick="showSection('delete')">Delete Anime</button>
+      <button onclick="showSection('edit')">Edit Anime Details</button>
+      <button onclick="showSection('nextAnime')">Next Anime Name</button>
+      <button onclick="showSection('popularAnime')">Popular Anime</button>
+      <button onclick="showSection('latestAnime')">Latest Anime</button> <!-- New button for Latest Anime -->
+      <!-- Rating and Latest features are now removed as per user request -->
+    </div>
+
+    <!-- Upload Section -->
+    <div id="uploadSection" class="admin-section hidden">
+        <h3>Upload New Anime</h3>
+        <form id="uploadForm" onsubmit="event.preventDefault(); handleUpload();">
+            <div class="form-group">
+                <label for="uploadTitle">Title :</label>
+                <input type="text" id="uploadTitle" required placeholder="Enter anime title">
+            </div>
+
+            <div class="form-group">
+                <label for="uploadCategory">Category:</label>
+                <input type="text" id="uploadCategory" required placeholder="e.g., Action, Comedy, Sci-Fi">
+            </div>
+
+            <div class="form-group">
+                <label for="uploadImage">Image URL:</label>
+                <input type="url" id="uploadImage" required placeholder="Anime thumbnail or image link">
+                <p class="image-url-guidance">Use a direct link to an image file (e.g., ending in .jpg, .png, .webp). Example: https://freeimage.host/i/FAnfYlf</p>
+            </div>
+
+            <div class="form-group">
+                <label for="uploadDownload1080p">Download URL (1080p):</label>
+                <input type="url" id="uploadDownload1080p" required placeholder="e.g., https://example.com/anime_1080p.mp4">
+            </div>
+
+            <div class="form-group">
+                <label for="uploadDownload720p">Download URL (720p - Optional):</label>
+                <input type="url" id="uploadDownload720p" placeholder="e.g., https://example.com/anime_720p.mp4">
+            </div>
+
+            <div class="form-group">
+                <label for="uploadReview">Review/Description:</label>
+                <textarea id="uploadReview" placeholder="Write a short review or description"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="uploadTrailerUrl">Trailer URL (Optional):</label>
+                <input type="url" id="uploadTrailerUrl" placeholder="e.g., https://www.youtube.com/embed/your_trailer_id" onblur="convertYoutubeUrl('uploadTrailerUrl')">
+                <p class="image-url-guidance">For YouTube trailers, use an embeddable URL (e.g., https://www.youtube.com/embed/your_trailer_id). If you paste a regular YouTube link, it will attempt to convert automatically.</p>
+            </div>
+
+            <!-- New: Uploader Name field for Upload Section (Read-only, pre-filled as ADMIN) -->
+            <div class="form-group">
+                <label for="uploadUploaderName">Uploader Name:</label>
+                <input type="text" id="uploadUploaderName" value="ADMIN" readonly>
+            </div>
+
+            <button type="submit" class="form-submit-button">Upload Anime</button>
+        </form>
+    </div>
+
+    <!-- Delete Section -->
+    <div id="deleteSection" class="admin-section hidden">
+        <h3>Delete Anime</h3>
+        <p>Select anime to delete:</p>
+        <div id="deleteAnimeList" class="anime-list-container">
+            <!-- Anime list will be loaded here -->
+            <p>Loading anime for deletion...</p>
+        </div>
+        <button class="form-submit-button hidden" id="deleteSelectedButton" onclick="confirmDeleteSelectedAnime()">Delete Selected Anime</button>
+    </div>
+
+    <!-- Edit Section -->
+    <div id="editSection" class="admin-section hidden">
+        <h3>Edit Anime Details</h3>
+        <div class="form-group">
+            <label for="editAnimeSelect">Select Anime:</label>
+            <select id="editAnimeSelect" onchange="loadAnimeForEdit(this.value)">
+                <option value="">-- Select an Anime --</option>
+                <!-- Anime options will be loaded here -->
+            </select>
+        </div>
+        <div id="editFormFields" class="hidden">
+            <div class="form-group">
+                <label for="editTitle">New Title:</label>
+                <input type="text" id="editTitle" required>
+            </div>
+            <div class="form-group">
+                <label for="editCategory">New Category:</label> <input type="text" id="editCategory" required>
+            </div>
+            <div class="form-group">
+                <label for="editImage">New Image URL:</label> <input type="url" id="editImage" required>
+                <p class="image-url-guidance">Use a direct link to an image file (e.g., ending in .jpg, .png, .webp).</p>
+            </div>
+            <!-- New: Uploader Name field for Edit Section (Read-only) -->
+            <div class="form-group">
+                <label for="editUploaderName">Uploader Name:</label>
+                <input type="text" id="editUploaderName" readonly>
+            </div>
+            <div class="form-group">
+                <label for="editDownload1080p">New Download URL (1080p):</label> <input type="url" id="editDownload1080p" required>
+            </div>
+            <div class="form-group">
+                <label for="editDownload720p">New Download URL (720p - Optional):</label> <input type="url" id="editDownload720p">
+            </div>
+            <div class="form-group">
+                <label for="editReview">New Review/Description:</label>
+                <textarea id="editReview"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="editTrailerUrl">New Trailer URL (Optional):</label>
+                <input type="url" id="editTrailerUrl" placeholder="e.g., https://www.youtube.com/embed/your_trailer_id" onblur="convertYoutubeUrl('editTrailerUrl')">
+                <p class="image-url-guidance">For YouTube trailers, use an embeddable URL (e.g., https://www.youtube.com/embed/your_trailer_id). If you paste a regular YouTube link, it will attempt to convert automatically.</p>
+            </div>
+            <button type="submit" class="form-submit-button" onclick="updateAnimeDetails()">Update Details</button>
+        </div>
+    </div>
+
+    <!-- Next Anime Section -->
+    <div id="nextAnimeSection" class="admin-section hidden">
+      <h3>Set Next Anime Name</h3>
+      <input type="text" id="nextAnimeInput" placeholder="e.g. Solo Leveling">
+      <button onclick="updateNextAnime()">Update</button>
+      <button onclick="clearNextAnime()" class="form-submit-button clear-button">Clear Next Anime</button>
+    </div>
+
+    <!-- Popular Anime Section -->
+    <div id="popularAnimeSection" class="admin-section hidden">
+      <h3>Manage Popular Anime</h3>
+      <div class="form-group">
+          <label for="popularAnimeSelect">Select Anime:</label>
+          <select id="popularAnimeSelect">
+              <option value="">-- Select an Anime --</option>
+              <!-- Anime options will be loaded here -->
+          </select>
+      </div>
+      <button class="form-submit-button" onclick="markAnimeAsPopular()">Mark as Popular</button>
+      <button class="form-submit-button clear-button" onclick="unmarkAnimeAsPopular()">Unmark as Popular</button>
+      
+      <h4>Currently Popular Anime:</h4>
+      <div id="currentPopularAnimeList" class="anime-list-container">
+          <p>Loading popular anime...</p>
+      </div>
+    </div>
+
+    <!-- New: Latest Anime Section -->
+    <div id="latestAnimeSection" class="admin-section hidden">
+      <h3>Manage Latest Anime</h3>
+      <div class="form-group">
+          <label for="latestAnimeSelect">Select Anime:</label>
+          <select id="latestAnimeSelect">
+              <option value="">-- Select an Anime --</option>
+              <!-- Anime options will be loaded here -->
+          </select>
+      </div>
+      <button class="form-submit-button" onclick="markAnimeAsLatest()">Mark as Latest</button>
+      <button class="form-submit-button clear-button" onclick="unmarkAnimeAsLatest()">Unmark as Latest</button>
+      
+      <h4>Currently Marked Latest Anime:</h4>
+      <div id="currentLatestAnimeList" class="anime-list-container">
+          <p>Loading marked latest anime...</p>
+      </div>
+    </div>
+
+    <!-- Removed Rating and Latest functions as per user request -->
+  </main>
+
+  <footer>
+    ZenkaiWorld Admin Panel.
+  </footer>
+
+  <div id="customMessageModal" class="custom-modal-overlay">
+    <div class="custom-modal-content">
+      <h3 id="modalTitle"></h3>
+      <p id="modalMessage"></p>
+      <div class="modal-buttons">
+        <button class="modal-ok-btn" id="modalOkButton">OK</button>
+        <button class="modal-cancel-btn" id="modalCancelButton">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+<script type="module">
+  // Base URL for your Flask backend API
+  const API_BASE_URL = 'http://127.0.0.1:5000'; // Local development URL
+
+  let customMessageModal;
+  let modalTitle;
+  let modalMessage;
+  let modalOkButton;
+  let modalCancelButton;
+  let nextAnimeInput; // Reference to the input field for next anime name
+  let popularAnimeSelect; // Reference to the select element for popular anime
+  let currentPopularAnimeListDiv; // Reference to the div displaying popular anime
+  let latestAnimeSelect; // New: Reference to the select element for latest anime
+  let currentLatestAnimeListDiv; // New: Reference to the div displaying latest anime
+  let allAnimeData = []; // To store all anime fetched for delete/edit/popular/latest sections
+
+  function escapeHTML(str) {
+      const div = document.createElement('div');
+      div.appendChild(document.createTextNode(str));
+      return div.innerHTML;
+  }
+
+  function showAlert(title, message) {
+    if (!customMessageModal) {
+      console.error(`${title}: ${message}`);
+      return Promise.resolve();
+    }
+    modalTitle.textContent = title;
+    modalMessage.textContent = message;
+    modalOkButton.textContent = 'OK';
+    modalOkButton.style.display = 'block';
+
+    if (modalCancelButton) modalCancelButton.style.display = 'none';
+
+    customMessageModal.classList.add('active');
+    return new Promise(resolve => {
+      modalOkButton.onclick = () => {
+        customMessageModal.classList.remove('active');
+        resolve();
+      };
+    });
+  }
+
+  function showConfirm(title, message) {
+      if (!customMessageModal) {
+          console.warn(`Confirmation needed: ${title} - ${message}`);
+          return Promise.resolve(false);
+      }
+      modalTitle.textContent = title;
+      modalMessage.textContent = message;
+      modalOkButton.textContent = 'Yes';
+      modalOkButton.style.display = 'block';
+
+      if (!modalCancelButton) {
+          modalCancelButton = document.getElementById('modalCancelButton');
+          if (!modalCancelButton) {
+              modalCancelButton = document.createElement('button');
+              modalCancelButton.id = 'modalCancelButton';
+              modalCancelButton.className = 'modal-cancel-btn';
+              document.querySelector('.custom-modal-content .modal-buttons').appendChild(modalCancelButton);
+          }
+      }
+      modalCancelButton.textContent = 'No';
+      modalCancelButton.style.display = 'block';
+
+      customMessageModal.classList.add('active');
+
+      return new Promise(resolve => {
+          modalOkButton.onclick = () => {
+              customMessageModal.classList.remove('active');
+              resolve(true);
+          };
+          modalCancelButton.onclick = () => {
+              customMessageModal.classList.remove('active');
+              resolve(false);
+          };
+      });
+  }
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    customMessageModal = document.getElementById("customMessageModal");
+    modalTitle = document.getElementById("modalTitle");
+    modalMessage = document.getElementById("modalMessage");
+    modalOkButton = document.getElementById("modalOkButton");
+    modalCancelButton = document.getElementById("modalCancelButton");
+    nextAnimeInput = document.getElementById('nextAnimeInput'); // Initialize next anime input
+    popularAnimeSelect = document.getElementById('popularAnimeSelect'); // Initialize popular anime select
+    currentPopularAnimeListDiv = document.getElementById('currentPopularAnimeList'); // Initialize popular anime list div
+    latestAnimeSelect = document.getElementById('latestAnimeSelect'); // New: Initialize latest anime select
+    currentLatestAnimeListDiv = document.getElementById('currentLatestAnimeList'); // New: Initialize latest anime list div
+
+    document.body.setAttribute('data-theme', 'dark');
+
+    // Fetch all anime data initially for admin panel sections
+    await fetchAllAnime();
+    // Fetch and display current next anime name when the page loads
+    await fetchAndDisplayCurrentNextAnime();
+    await fetchPopularAnimeList(); // Initial load of popular anime
+    await fetchLatestAnimeList(); // Initial load of latest anime
+  });
+
+  window.convertYoutubeUrl = function(inputId) {
+      const inputElement = document.getElementById(inputId);
+      let url = inputElement.value.trim();
+      if (!url) return;
+
+      const youtubeWatchRegex = /(?:https?:\/\/)?(?:www\.)?(?:m\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/|v\/|)([\w-]{11})(?:\S+)?/i;
+      const match = url.match(youtubeWatchRegex);
+
+      if (match && match[1]) {
+          const videoId = match[1];
+          const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+          if (url !== embedUrl) {
+              showAlert('URL Converted', 'YouTube link has been converted to embed format.');
+          }
+          inputElement.value = embedUrl; // Update the input field with the embed URL
+      } else if (!url.startsWith('https://www.youtube.com/embed/') && url !== '') {
+          showAlert('Invalid Format', 'This does not appear to be a valid YouTube embed URL. Please use "https://www.youtube.com/embed/VIDEO_ID" format.');
+      }
+  };
+
+  window.showSection = async function(sectionId) {
+    document.getElementById('uploadSection').classList.add('hidden');
+    document.getElementById('deleteSection').classList.add('hidden');
+    document.getElementById('editSection').classList.add('hidden');
+    document.getElementById('nextAnimeSection').classList.add('hidden');
+    document.getElementById('popularAnimeSection').classList.add('hidden');
+    document.getElementById('latestAnimeSection').classList.add('hidden'); // Hide latest anime section
+    
+    document.getElementById('deleteSelectedButton').classList.add('hidden');
+    document.getElementById('editFormFields').classList.add('hidden');
+
+    if (sectionId === 'upload') {
+      document.getElementById('uploadSection').classList.remove('hidden');
+    } else if (sectionId === 'delete') {
+      document.getElementById('deleteSection').classList.remove('hidden');
+      await loadAnimeForDeletion(); // Load anime when delete section is shown
+    } else if (sectionId === 'edit') {
+      document.getElementById('editSection').classList.remove('hidden');
+      await populateEditAnimeSelect(); // Populate dropdown for editing
+    } else if (sectionId === 'nextAnime') {
+      document.getElementById('nextAnimeSection').classList.remove('hidden');
+      await fetchAndDisplayCurrentNextAnime(); // Refresh next anime name
+    } else if (sectionId === 'popularAnime') {
+      document.getElementById('popularAnimeSection').classList.remove('hidden');
+      await loadAnimeForPopularSelection(); // Load anime for popular selection
+      await fetchPopularAnimeList(); // Fetch and display currently popular anime
+    } else if (sectionId === 'latestAnime') { // Show latest anime section
+      document.getElementById('latestAnimeSection').classList.remove('hidden');
+      await loadAnimeForLatestSelection(); // New: Load anime for latest selection
+      await fetchLatestAnimeList(); // New: Fetch and display currently latest anime
+    }
+  };
+
+  // Function to handle anime upload
+  window.handleUpload = async function() {
+      const title = document.getElementById('uploadTitle').value.trim();
+      const category = document.getElementById('uploadCategory').value.trim();
+      const image = document.getElementById('uploadImage').value.trim();
+      const download1080p = document.getElementById('uploadDownload1080p').value.trim();
+      const download720p = document.getElementById('uploadDownload720p').value.trim();
+      const review = document.getElementById('uploadReview').value.trim();
+      const trailerUrl = document.getElementById('uploadTrailerUrl').value.trim();
+      // Uploader Name will always be "ADMIN" from admin panel
+      const uploaderName = "ADMIN"; 
+
+      if (!title || !category || !image || !download1080p || !review) {
+          showAlert('Validation Error', 'Please fill in all required fields (Title, Category, Image URL, 1080p Download URL, Review).');
+          return;
+      }
+
+      const animeData = {
+          title,
+          category,
+          image,
+          download1080p,
+          download720p: download720p || null, // Send null if 720p is empty
+          review,
+          trailerUrl: trailerUrl || null, // Send null if trailerUrl is empty
+          uploader_name: uploaderName, // Add uploader name
+          is_popular: false, // Default to not popular on upload
+          is_latest: false, // New: Default to not latest on upload (manual control)
+          created_at: new Date().toISOString() // Add creation timestamp for sorting
+      };
+
+      try {
+          const response = await fetch(`${API_BASE_URL}/api/upload_anime`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(animeData)
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+              showAlert('Success', result.message || 'Anime uploaded successfully!');
+              document.getElementById('uploadForm').reset(); // Clear form
+              await fetchAllAnime(); // Refresh global anime data after upload
+              await fetchPopularAnimeList(); // Refresh popular anime list after upload
+              await fetchLatestAnimeList(); // New: Refresh latest anime list after upload
+          } else {
+              throw new Error(result.error || 'Failed to upload anime.');
+          }
+      } catch (error) {
+          console.error('Error uploading anime:', error);
+          showAlert('Upload Failed', `Failed to upload anime: ${error.message}. Please try again.`);
+      }
+  };
+
+
+  // Function to fetch all anime for delete/edit/popular/latest sections
+  async function fetchAllAnime() {
+      try {
+          const response = await fetch(`${API_BASE_URL}/api/anime`);
+          if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(errorData.error || 'Failed to fetch anime data for admin.');
+          }
+          const data = await response.json();
+          allAnimeData = data; // Store fetched data globally
+          return data;
+      } catch (err) {
+          console.error('Error fetching all anime for admin:', err.message);
+          showAlert('Error', `Failed to load anime list: ${err.message}. Please ensure your Flask backend is running.`);
+          return [];
+      }
+  }
+
+  // Function to load anime for deletion
+  async function loadAnimeForDeletion() {
+      const deleteAnimeListDiv = document.getElementById('deleteAnimeList');
+      const deleteSelectedButton = document.getElementById('deleteSelectedButton');
+      deleteAnimeListDiv.innerHTML = '<p>Loading anime...</p>';
+      deleteSelectedButton.classList.add('hidden');
+
+      const anime = await fetchAllAnime();
+      if (anime.length === 0) {
+          deleteAnimeListDiv.innerHTML = '<p>No anime available for deletion.</p>';
+          return;
+      }
+
+      let html = '<ul>';
+      anime.forEach(item => {
+          html += `
+              <li>
+                  <input type="checkbox" id="delete-${item._id}" value="${item._id}">
+                  <label for="delete-${item._id}">${escapeHTML(item.title)}</label>
+              </li>
+          `;
+      });
+      html += '</ul>';
+      deleteAnimeListDiv.innerHTML = html;
+      deleteSelectedButton.classList.remove('hidden');
+  }
+
+  // Function to confirm and delete selected anime
+  window.confirmDeleteSelectedAnime = async function() {
+      const checkboxes = document.querySelectorAll('#deleteAnimeList input[type="checkbox"]:checked');
+      if (checkboxes.length === 0) {
+          showAlert('No Selection', 'Please select at least one anime to delete.');
+          return;
+      }
+
+      const confirm = await showConfirm('Confirm Deletion', `Are you sure you want to delete ${checkboxes.length} selected anime?`);
+      if (!confirm) {
+          return;
+      }
+
+      const deletePromises = [];
+      checkboxes.forEach(checkbox => {
+          const animeId = checkbox.value;
+          deletePromises.push(
+              fetch(`${API_BASE_URL}/api/delete_anime/${animeId}`, {
+                  method: 'DELETE'
+              }).then(response => {
+                  if (!response.ok) {
+                      return response.json().then(err => Promise.reject(err.error || 'Failed to delete'));
+                  }
+                  return response.json();
+              }).catch(error => {
+                  console.error(`Error deleting anime ${animeId}:`, error);
+                  return { success: false, id: animeId, error: error.message };
+              })
+          );
+      });
+
+      const results = await Promise.all(deletePromises);
+      let successCount = 0;
+      let failCount = 0;
+      results.forEach(res => {
+          if (res.success !== false) { // Check for non-error responses
+              successCount++;
+          } else {
+              failCount++;
+          }
+      });
+
+      if (successCount > 0) {
+          showAlert('Deletion Complete', `${successCount} anime deleted successfully.`);
+          await loadAnimeForDeletion(); // Reload list after deletion
+          await fetchPopularAnimeList(); // Refresh popular anime list after deletion
+          await fetchLatestAnimeList(); // New: Refresh latest anime list after deletion
+      }
+      if (failCount > 0) {
+          showAlert('Deletion Failed', `${failCount} anime could not be deleted. Check console for details.`);
+      }
+  };
+
+  // Function to populate the dropdown for editing anime
+  async function populateEditAnimeSelect() {
+      const editAnimeSelect = document.getElementById('editAnimeSelect');
+      editAnimeSelect.innerHTML = '<option value="">-- Select an Anime --</option>'; // Clear and add default option
+      document.getElementById('editFormFields').classList.add('hidden'); // Hide form fields initially
+
+      const anime = await fetchAllAnime();
+      if (anime.length === 0) {
+          editAnimeSelect.innerHTML = '<option value="">No anime available for editing.</option>';
+          return;
+      }
+
+      anime.forEach(item => {
+          const option = document.createElement('option');
+          option.value = item._id;
+          option.textContent = escapeHTML(item.title);
+          editAnimeSelect.appendChild(option);
+      });
+  }
+
+  // Function to load anime details into the edit form
+  window.loadAnimeForEdit = function(animeId) {
+      const editFormFields = document.getElementById('editFormFields');
+      if (!animeId) {
+          editFormFields.classList.add('hidden');
+          return;
+      }
+
+      const selectedAnime = allAnimeData.find(anime => anime._id === animeId);
+      if (selectedAnime) {
+          document.getElementById('editTitle').value = selectedAnime.title || '';
+          document.getElementById('editCategory').value = selectedAnime.category || '';
+          document.getElementById('editImage').value = selectedAnime.image || '';
+          document.getElementById('editDownload1080p').value = selectedAnime.download1080p || '';
+          document.getElementById('editDownload720p').value = selectedAnime.download720p || '';
+          document.getElementById('editReview').value = selectedAnime.review || '';
+          document.getElementById('editTrailerUrl').value = selectedAnime.trailerUrl || '';
+          document.getElementById('editUploaderName').value = selectedAnime.uploader_name || 'Unknown'; // Load uploader name
+          editFormFields.classList.remove('hidden');
+          editFormFields.dataset.animeId = animeId; // Store the ID for update
+      } else {
+          showAlert('Error', 'Anime details not found.');
+          editFormFields.classList.add('hidden');
+      }
+  };
+
+  // Function to update anime details
+  window.updateAnimeDetails = async function() {
+      const animeId = document.getElementById('editFormFields').dataset.animeId;
+      if (!animeId) {
+          showAlert('Error', 'No anime selected for update.');
+          return;
+      }
+
+      const updatedData = {
+          title: document.getElementById('editTitle').value.trim(),
+          category: document.getElementById('editCategory').value.trim(),
+          image: document.getElementById('editImage').value.trim(),
+          download1080p: document.getElementById('editDownload1080p').value.trim(),
+          download720p: document.getElementById('editDownload720p').value.trim() || null,
+          review: document.getElementById('editReview').value.trim(),
+          trailerUrl: document.getElementById('editTrailerUrl').value.trim() || null
+          // uploader_name, is_popular, is_latest will not be updated from here, they are read-only or managed separately
+      };
+
+      if (!updatedData.title || !updatedData.category || !updatedData.image || !updatedData.download1080p || !updatedData.review) {
+          showAlert('Validation Error', 'Please fill in all required fields for update.');
+          return;
+      }
+
+      try {
+          const response = await fetch(`${API_BASE_URL}/api/update_anime/${animeId}`, {
+              method: 'PUT',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(updatedData)
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+              showAlert('Success', result.message || 'Anime updated successfully!');
+              document.getElementById('editFormFields').classList.add('hidden');
+              document.getElementById('editAnimeSelect').value = ''; // Reset dropdown
+              await populateEditAnimeSelect(); // Reload dropdown with updated data
+              await fetchAllAnime(); // Refresh global anime data
+              await fetchPopularAnimeList(); // Refresh popular anime list after edit
+              await fetchLatestAnimeList(); // New: Refresh latest anime list after edit
+          } else {
+              throw new Error(result.error || 'Failed to update anime.');
+          }
+      } catch (error) {
+          console.error('Error updating anime:', error);
+          showAlert('Update Failed', `Failed to update anime: ${error.message}.`);
+      }
+  };
+
+  // Function to fetch the current "Next Anime" from Flask backend for Admin Panel
+  async function fetchAndDisplayCurrentNextAnime() {
+      try {
+          const response = await fetch(`${API_BASE_URL}/api/next_anime`);
+          if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(errorData.error || 'Failed to fetch next anime for admin panel');
+          }
+          const data = await response.json();
+          if (nextAnimeInput) {
+              nextAnimeInput.value = data.anime_name || "";
+          }
+      } catch (err) {
+          console.error('Error fetching next anime for admin:', err.message);
+          showAlert('Error', `Failed to load Next Anime for admin: ${err.message}.`);
+          if (nextAnimeInput) {
+              nextAnimeInput.value = "Error loading";
+          }
+      }
+  }
+
+  // Function to update the "Next Anime" name via Flask backend
+  window.updateNextAnime = async function() {
+    const animeName = nextAnimeInput.value.trim();
+    if (!animeName) {
+        showAlert('Validation Error', 'Please enter a name for the next anime.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/set_next_anime`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ anime_name: animeName })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            showAlert('Success', result.message || 'Next Anime name updated successfully!');
+            await fetchAndDisplayCurrentNextAnime(); // Refresh displayed name
+        } else {
+            throw new Error(result.error || 'Failed to update next anime.');
+        }
+    } catch (error) {
+        console.error('Error updating next anime:', error);
+        showAlert('Update Failed', `Failed to update Next Anime: ${error.message}.`);
+    }
+  };
+
+  // Function to clear the "Next Anime" name via Flask backend
+  window.clearNextAnime = async function() {
+    const confirmClear = await showConfirm('Confirm Clear', 'Are you sure you want to clear the Next Anime name?');
+    if (!confirmClear) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/clear_next_anime`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            showAlert('Success', result.message || 'Next Anime name cleared successfully!');
+            await fetchAndDisplayCurrentNextAnime(); // Update displayed name to empty
+        } else {
+            throw new Error(result.error || 'Failed to clear next anime.');
+        }
+    } catch (error) {
+        console.error('Error clearing next anime:', error);
+        showAlert('Clear Failed', `Failed to clear Next Anime: ${error.message}.`);
+    }
+  };
+
+  // Function to load anime for popular selection
+  async function loadAnimeForPopularSelection() {
+      popularAnimeSelect.innerHTML = '<option value="">-- Select an Anime --</option>'; // Clear and add default option
+      const anime = allAnimeData; // Use the globally stored allAnimeData
+      if (anime.length === 0) {
+          popularAnimeSelect.innerHTML = '<option value="">No anime available.</option>';
+          return;
+      }
+      anime.forEach(item => {
+          const option = document.createElement('option');
+          option.value = item._id;
+          option.textContent = escapeHTML(item.title);
+          popularAnimeSelect.appendChild(option);
+      });
+  }
+
+  // Function to mark anime as popular
+  window.markAnimeAsPopular = async function() {
+      const animeId = popularAnimeSelect.value;
+      if (!animeId) {
+          showAlert('No Selection', 'Please select an anime to mark as popular.');
+          return;
+      }
+
+      try {
+          const response = await fetch(`${API_BASE_URL}/api/mark_popular/${animeId}`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' }
+          });
+          const result = await response.json();
+          if (response.ok) {
+              showAlert('Success', result.message || 'Anime marked as popular!');
+              await fetchAllAnime(); // Refresh global data
+              await fetchPopularAnimeList(); // Refresh popular list display
+          } else {
+              throw new Error(result.error || 'Failed to mark as popular.');
+          }
+      } catch (error) {
+          console.error('Error marking anime as popular:', error);
+          showAlert('Error', `Failed to mark anime as popular: ${error.message}.`);
+      }
+  };
+
+  // Function to unmark anime as popular
+  window.unmarkAnimeAsPopular = async function() {
+      const animeId = popularAnimeSelect.value;
+      if (!animeId) {
+          showAlert('No Selection', 'Please select an anime to unmark as popular.');
+          return;
+      }
+
+      try {
+          const response = await fetch(`${API_BASE_URL}/api/unmark_popular/${animeId}`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' }
+          });
+          const result = await response.json();
+          if (response.ok) {
+              showAlert('Success', result.message || 'Anime unmarked as popular!');
+              await fetchAllAnime(); // Refresh global data
+              await fetchPopularAnimeList(); // Refresh popular list display
+          } else {
+              throw new Error(result.error || 'Failed to unmark as popular.');
+          }
+      } catch (error) {
+          console.error('Error unmarking anime as popular:', error);
+          showAlert('Error', `Failed to unmark anime as popular: ${error.message}.`);
+      }
+  };
+
+  // Function to fetch and display currently popular anime
+  async function fetchPopularAnimeList() {
+      currentPopularAnimeListDiv.innerHTML = '<p>Loading popular anime...</p>';
+      const popularAnime = allAnimeData.filter(anime => anime.is_popular);
+      if (popularAnime.length === 0) {
+          currentPopularAnimeListDiv.innerHTML = '<p>No anime currently marked as popular.</p>';
+          return;
+      }
+      let html = '<ul>';
+      popularAnime.forEach(item => {
+          html += `<li>${escapeHTML(item.title)}</li>`;
+      });
+      html += '</ul>';
+      currentPopularAnimeListDiv.innerHTML = html;
+  }
+
+  // New: Function to load anime for latest selection
+  async function loadAnimeForLatestSelection() {
+      latestAnimeSelect.innerHTML = '<option value="">-- Select an Anime --</option>'; // Clear and add default option
+      const anime = allAnimeData; // Use the globally stored allAnimeData
+      if (anime.length === 0) {
+          latestAnimeSelect.innerHTML = '<option value="">No anime available.</option>';
+          return;
+      }
+      anime.forEach(item => {
+          const option = document.createElement('option');
+          option.value = item._id;
+          option.textContent = escapeHTML(item.title);
+          latestAnimeSelect.appendChild(option);
+      });
+  }
+
+  // New: Function to mark anime as latest
+  window.markAnimeAsLatest = async function() {
+      const animeId = latestAnimeSelect.value;
+      if (!animeId) {
+          showAlert('No Selection', 'Please select an anime to mark as latest.');
+          return;
+      }
+
+      try {
+          const response = await fetch(`${API_BASE_URL}/api/mark_latest/${animeId}`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' }
+          });
+          const result = await response.json();
+          if (response.ok) {
+              showAlert('Success', result.message || 'Anime marked as latest!');
+              await fetchAllAnime(); // Refresh global data
+              await fetchLatestAnimeList(); // Refresh latest list display
+          } else {
+              throw new Error(result.error || 'Failed to mark as latest.');
+          }
+      } catch (error) {
+          console.error('Error marking anime as latest:', error);
+          showAlert('Error', `Failed to mark anime as latest: ${error.message}.`);
+      }
+  };
+
+  // New: Function to unmark anime as latest
+  window.unmarkAnimeAsLatest = async function() {
+      const animeId = latestAnimeSelect.value;
+      if (!animeId) {
+          showAlert('No Selection', 'Please select an anime to unmark as latest.');
+          return;
+      }
+
+      try {
+          const response = await fetch(`${API_BASE_URL}/api/unmark_latest/${animeId}`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' }
+          });
+          const result = await response.json();
+          if (response.ok) {
+              showAlert('Success', result.message || 'Anime unmarked as latest!');
+              await fetchAllAnime(); // Refresh global data
+              await fetchLatestAnimeList(); // Refresh latest list display
+          } else {
+              throw new Error(result.error || 'Failed to unmark as latest.');
+          }
+      } catch (error) {
+          console.error('Error unmarking anime as latest:', error);
+          showAlert('Error', `Failed to unmark anime as latest: ${error.message}.`);
+      }
+  };
+
+  // New: Function to fetch and display currently latest anime
+  async function fetchLatestAnimeList() {
+      currentLatestAnimeListDiv.innerHTML = '<p>Loading marked latest anime...</p>';
+      const latestAnime = allAnimeData.filter(anime => anime.is_latest).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+      if (latestAnime.length === 0) {
+          currentLatestAnimeListDiv.innerHTML = '<p>No anime currently marked as latest.</p>';
+          return;
+      }
+      let html = '<ul>';
+      latestAnime.forEach(item => {
+          html += `<li>${escapeHTML(item.title)}</li>`;
+      });
+      html += '</ul>';
+      currentLatestAnimeListDiv.innerHTML = html;
+  }
+
+  // Removed Rating and Latest functions as per user request
+</script>
+<script>
+    // Prevent context menu (right-click)
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+
+    // Prevent developer tools access via keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+      if (
+        e.key === "F12" ||
+        (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+        (e.ctrlKey && e.shiftKey && e.key === 'J') ||
+        (e.ctrlKey && e.key === 'U') ||
+        (e.metaKey && e.altKey && e.key === 'i') ||
+        (e.metaKey && e.altKey && e.key === 'j') ||
+        (e.metaKey && e.altKey && e.key === 'c')
+      ) {
+        e.preventDefault();
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.metaKey && e.altKey) {
+            if (e.key === 'c' || e.key === 'i' || e.key === 'j') {
+                e.preventDefault();
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

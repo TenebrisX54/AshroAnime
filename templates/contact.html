@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <!-- Updated meta viewport for no zoom and fixed width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Contact Us - ZenkaiWorld</title>
+  <!-- Favicon updated to new URL -->
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/ZnxPMLYj/Icon-ASHRO-ANIME.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Alegreya Font Added -->
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+  <!-- Linking the external contact.css file -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='contact.css') }}">
+
+</head>
+<body data-theme="dark">
+  <div class="main-header">
+    <div class="logo-container">
+      <a href="/"> <!-- Changed from Home.html to / -->
+        <!-- Logo updated to new URL -->
+        <img src="https://i.postimg.cc/rskz7XK2/Logo.png" alt="ASHRO ANIME">
+      </a>
+    </div>
+  </div>
+
+  <h1><a href="/">ZenkaiWorld</a></h1> <!-- Changed from Home.html to / -->
+
+  <main class="contact-container">
+    <h2>Contact Us</h2>
+    <p>Have questions, feedback, or suggestions? Feel free to reach out to us using the form below!</p>
+    <form id="contactForm" onsubmit="event.preventDefault(); handleContactFormSubmit();">
+      <div class="form-group">
+        <label for="name">Your Name:</label>
+        <input type="text" id="name" name="name" required placeholder="Enter your name">
+      </div>
+      <div class="form-group">
+        <label for="email">Your Email:</label>
+        <input type="email" id="email" name="email" required placeholder="Enter your email">
+      </div>
+      <div class="form-group">
+        <label for="message">Your Message:</label>
+        <textarea id="message" name="message" required placeholder="Type your message here..."></textarea>
+      </div>
+      <button type="submit" class="submit-button">Send Message</button>
+    </form>
+
+    <div class="connect-with-us">
+        <h3>Connect With Us</h3>
+        <p>You can also reach us through our social media or email:</p>
+        <div class="social-links">
+            <a href="https://www.instagram.com/greatemperor63/" target="_blank">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/instagram-new.png" alt="Instagram" style="width:24px;height:24px;vertical-align:middle;margin-right:5px;"> Instagram
+            </a>
+            <a href="https://www.youtube.com/channel/UCikojJpuKxny4GvvdOncRFQ" target="_blank">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/youtube-play.png" alt="YouTube" style="width:24px;height:24px;vertical-align:middle;margin-right:5px;"> YouTube
+            </a>
+            <a href="mailto:geatemperor623@gmail.com">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/email.png" alt="Email" style="width:24px;height:24px;vertical-align:middle;margin-right:5px;"> Email: geatemperor623@gmail.com
+            </a>
+        </div>
+    </div>
+    
+    <a href="/" class="back-button">Go Back to Home</a> <!-- Changed from Home.html to / -->
+  </main>
+
+  <section class="comments-section">
+    <h3>Community Comments</h3>
+    <p class="no-comments" id="noCommentsMessage" style="display: none;">No comments yet. Be the first to leave a comment!</p>
+    <div id="commentsList">
+      <!-- Comments will be rendered here -->
+    </div>
+    <p style="font-size: 0.8em; color: #777; text-align: center; margin-top: 20px;">
+        Note: This is a real-time comment section. Messages are stored on a cloud database and are visible to everyone.
+    </p>
+  </section>
+
+  <footer>
+    All anime Hindi dubbed in high quality; I upload only Hindi dubbed anime.
+  </footer>
+
+  <div id="customMessageModal" class="custom-modal-overlay">
+    <div class="custom-modal-content">
+      <h3 id="modalTitle"></h3>
+      <p id="modalMessage"></p>
+      <div class="modal-buttons">
+        <button class="modal-ok-btn" id="modalOkButton">OK</button>
+        <button class="modal-cancel-btn" id="modalCancelButton" style="display:none;">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Base URL for your Flask backend API
+    const API_BASE_URL = 'http://127.0.0.1:5000'; // Local development URL
+
+    let customMessageModal;
+    let modalTitle;
+    let modalMessage;
+    let modalOkButton;
+    let modalCancelButton; 
+    let commentsListDiv;
+    let noCommentsMessage;
+
+    // Function to escape HTML characters to prevent XSS
+    function escapeHTML(str) {
+        const div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+    }
+
+    // Function to show a custom alert modal
+    function showAlert(title, message) {
+      return new Promise(resolve => {
+        if (!customMessageModal) customMessageModal = document.getElementById("customMessageModal");
+        if (!modalTitle) modalTitle = document.getElementById("modalTitle");
+        if (!modalMessage) modalMessage = document.getElementById("modalMessage");
+        if (!modalOkButton) modalOkButton = document.getElementById("modalOkButton");
+        if (!modalCancelButton) modalCancelButton = document.getElementById("modalCancelButton");
+
+        if (!customMessageModal || !modalTitle || !modalMessage || !modalOkButton) {
+          console.error("Custom modal elements not found, falling back to console log for alert.");
+          console.log(`${title}: ${message}`);
+          resolve(true);
+          return;
+        }
+        
+        modalTitle.textContent = title;
+        modalMessage.textContent = message;
+        modalOkButton.style.display = 'block';
+        if (modalCancelButton) {
+            modalCancelButton.style.display = 'none'; 
+        }
+        customMessageModal.classList.add('active');
+        modalOkButton.onclick = () => {
+          customMessageModal.classList.remove('active');
+          resolve(true);
+        };
+      });
+    }
+
+    // Function to show a custom confirmation modal
+    function showConfirm(title, message) {
+        return new Promise(resolve => {
+            if (!customMessageModal) customMessageModal = document.getElementById("customMessageModal");
+            if (!modalTitle) modalTitle = document.getElementById("modalTitle");
+            if (!modalMessage) modalMessage = document.getElementById("modalMessage");
+            if (!modalOkButton) modalOkButton = document.getElementById("modalOkButton");
+            if (!modalCancelButton) modalCancelButton = document.getElementById("modalCancelButton");
+
+            if (!customMessageModal || !modalTitle || !modalMessage || !modalOkButton || !modalCancelButton) {
+                console.error("Custom modal elements not found, falling back to console log for confirm.");
+                resolve(confirm(`${title}\n${message}`));
+                return;
+            }
+
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            modalOkButton.style.display = 'block';
+            modalOkButton.textContent = 'Yes';
+            modalCancelButton.style.display = 'block';
+            modalCancelButton.textContent = 'No';
+            customMessageModal.classList.add('active');
+
+            modalOkButton.onclick = () => {
+                customMessageModal.classList.remove('active');
+                resolve(true);
+            };
+            modalCancelButton.onclick = () => {
+                customMessageModal.classList.remove('active');
+                resolve(false);
+            };
+        });
+    }
+
+    // Function to handle contact form submission
+    async function handleContactFormSubmit() {
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const message = document.getElementById('message').value.trim();
+
+        if (name === '' || email === '' || message === '') {
+            await showAlert('Error', 'Please fill in all fields before sending your message.');
+            return;
+        }
+
+        const commentData = {
+            name: name,
+            email: email,
+            message: message
+        };
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/comments`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(commentData)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                await showAlert('Success', result.message || 'Your message has been sent successfully!');
+                document.getElementById('contactForm').reset(); // Clear form
+                await fetchComments(); // Refresh comments list
+            } else {
+                throw new Error(result.error || 'Failed to send message.');
+            }
+        } catch (error) {
+            console.error('Error submitting contact form:', error);
+            await showAlert('Submission Failed', `Failed to send message: ${error.message}. Please try again.`);
+        }
+    }
+
+    // Function to handle liking/disliking a comment or reply
+    async function handleReaction(id, type, isReply = false, parentCommentId = null) {
+        let url = `${API_BASE_URL}/api/comments/${id}/react`;
+        if (isReply) {
+            url = `${API_BASE_URL}/api/comments/${parentCommentId}/replies/${id}/react`;
+        }
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ type: type })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                // await showAlert('Success', result.message || 'Reaction recorded!'); // No alert for reactions
+                await fetchComments(); // Refresh comments to show updated counts
+            } else {
+                throw new Error(result.error || 'Failed to record reaction.');
+            }
+        } catch (error) {
+            console.error('Error reacting:', error);
+            await showAlert('Reaction Failed', `Failed to record reaction: ${error.message}.`);
+        }
+    }
+
+    // Function to handle replying to a comment
+    async function handleReplySubmit(commentId, event) {
+        event.preventDefault();
+        const replyForm = event.target;
+        const name = replyForm.querySelector('.reply-name-input').value.trim();
+        const email = replyForm.querySelector('.reply-email-input').value.trim();
+        const message = replyForm.querySelector('.reply-message-input').value.trim();
+
+        if (!name || !email || !message) {
+            await showAlert('Validation Error', 'Please fill in all fields for your reply.');
+            return;
+        }
+
+        const replyData = { name, email, message };
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/comments/${commentId}/replies`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(replyData)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                await showAlert('Success', result.message || 'Reply added successfully!');
+                replyForm.reset();
+                replyForm.style.display = 'none'; // Hide form after submission
+                await fetchComments(); // Refresh comments
+            } else {
+                throw new Error(result.error || 'Failed to add reply.');
+            }
+        } catch (error) {
+            console.error('Error adding reply:', error);
+            await showAlert('Reply Failed', `Failed to add reply: ${error.message}.`);
+        }
+    }
+
+    // Function to fetch and display comments
+    async function fetchComments() {
+        commentsListDiv.innerHTML = '<p style="text-align: center; color: #888;">Loading comments...</p>';
+        noCommentsMessage.style.display = 'none'; // Hide "No comments yet" initially
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/comments`); 
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to fetch comments');
+            }
+            const comments = await response.json();
+
+            if (comments.length === 0) {
+                noCommentsMessage.style.display = 'block'; // Show if no comments
+                commentsListDiv.innerHTML = ''; // Clear list
+            } else {
+                noCommentsMessage.style.display = 'none'; // Hide if comments exist
+                let html = '';
+                comments.forEach(comment => {
+                    const commentDate = comment.created_at ? new Date(comment.created_at).toLocaleString() : 'N/A';
+                    html += `
+                        <div class="comment-item" id="comment-${comment._id}">
+                            <div class="comment-header">
+                                <p class="comment-author"><strong>${escapeHTML(comment.name)}</strong> <span class="comment-email">(${escapeHTML(comment.email)})</span></p>
+                                <p class="comment-date">${commentDate}</p>
+                            </div>
+                            <p class="comment-message">${escapeHTML(comment.message)}</p>
+                            <div class="comment-actions">
+                                <button class="like-button" onclick="handleReaction('${comment._id}', 'like')">総 ${comment.likes || 0}</button>
+                                <button class="dislike-button" onclick="handleReaction('${comment._id}', 'dislike')">綜 ${comment.dislikes || 0}</button>
+                                <button class="reply-button" onclick="toggleReplyForm('${comment._id}')">Reply</button>
+                            </div>
+                            <div class="reply-form-container" id="replyForm-${comment._id}" style="display: none;">
+                                <form onsubmit="handleReplySubmit('${comment._id}', event)">
+                                    <input type="text" class="reply-name-input" placeholder="Your Name" required>
+                                    <input type="email" class="reply-email-input" placeholder="Your Email" required>
+                                    <textarea class="reply-message-input" placeholder="Your Reply" required></textarea>
+                                    <button type="submit" class="submit-reply-button">Submit Reply</button>
+                                    <button type="button" class="cancel-reply-button" onclick="toggleReplyForm('${comment._id}')">Cancel</button>
+                                </form>
+                            </div>
+                            <div class="replies-list">
+                                ${comment.replies && comment.replies.length > 0 ? 
+                                    comment.replies.map(reply => {
+                                        const replyDate = reply.created_at ? new Date(reply.created_at).toLocaleString() : 'N/A';
+                                        return `
+                                            <div class="reply-item" id="reply-${reply._id}">
+                                                <div class="comment-header">
+                                                    <p class="comment-author"><strong>${escapeHTML(reply.name)}</strong> <span class="comment-email">(${escapeHTML(reply.email)})</span></p>
+                                                    <p class="comment-date">${replyDate}</p>
+                                                </div>
+                                                <p class="comment-message">${escapeHTML(reply.message)}</p>
+                                                <div class="comment-actions">
+                                                    <button class="like-button" onclick="handleReaction('${reply._id}', 'like', true, '${comment._id}')">総 ${reply.likes || 0}</button>
+                                                    <button class="dislike-button" onclick="handleReaction('${reply._id}', 'dislike', true, '${comment._id}')">綜 ${reply.dislikes || 0}</button>
+                                                </div>
+                                            </div>
+                                        `;
+                                    }).join('')
+                                : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                commentsListDiv.innerHTML = html;
+            }
+        } catch (error) {
+            console.error('Error fetching comments:', error);
+            commentsListDiv.innerHTML = `<p style="color: red; text-align: center;">Failed to load comments: ${error.message}.</p>`;
+            noCommentsMessage.style.display = 'none'; // Hide default message on error
+        }
+    }
+
+    // Function to toggle reply form visibility
+    window.toggleReplyForm = function(commentId) {
+        const replyForm = document.getElementById(`replyForm-${commentId}`);
+        if (replyForm) {
+            replyForm.style.display = replyForm.style.display === 'none' ? 'block' : 'none';
+            if (replyForm.style.display === 'block') {
+                replyForm.querySelector('.reply-name-input').focus(); // Focus on name input
+            }
+        }
+    };
+
+    // Placeholder for sortAnime function (not used on this page)
+    window.sortAnime = function(order) {
+      console.log("Sorting not implemented on this page.");
+    };
+
+    // DOMContentLoaded event listener to initialize elements and fetch data
+    document.addEventListener('DOMContentLoaded', async () => {
+      customMessageModal = document.getElementById("customMessageModal");
+      modalTitle = document.getElementById("modalTitle");
+      modalMessage = document.getElementById("modalMessage");
+      modalOkButton = document.getElementById("modalOkButton");
+      modalCancelButton = document.getElementById("modalCancelButton");
+      commentsListDiv = document.getElementById('commentsList');
+      noCommentsMessage = document.getElementById('noCommentsMessage');
+
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        document.body.setAttribute('data-theme', savedTheme);
+      } else {
+        document.body.setAttribute('data-theme', 'dark'); 
+      }
+
+      const contactForm = document.getElementById('contactForm');
+      contactForm.addEventListener('submit', handleContactFormSubmit);
+
+      // Fetch and display comments on page load
+      await fetchComments();
+    });
+  </script>
+  <script>
+// Prevent context menu (right-click)
+document.addEventListener('contextmenu', function(e) {
+  e.preventDefault();
+});
+
+// Prevent developer tools access via keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+  if (
+    e.key === "F12" ||
+    (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+    (e.ctrlKey && e.shiftKey && e.key === 'J') ||
+    (e.ctrlKey && e.key === 'U') ||
+    (e.metaKey && e.altKey && e.key === 'i') ||
+    (e.metaKey && e.altKey && e.key === 'j')
+  ) {
+    e.preventDefault();
+  }
+});
+
+document.addEventListener('keydown', function(e) {
+    if (e.metaKey && e.altKey) {
+        if (e.key === 'c' || e.key === 'i' || e.key === 'j') {
+            e.preventDefault();
+        }
+    }
+});
+</script>
+<script>
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (
+        e.key === "F12" ||
+        (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+        (e.ctrlKey && e.shiftKey && e.key === 'J') ||
+        (e.ctrlKey && e.key === 'U') ||
+        (e.metaKey && e.altKey && e.key === 'i') ||
+        (e.metaKey && e.altKey && e.key === 'j') ||
+        (e.metaKey && e.altKey && e.key === 'c')
+      ) {
+        e.preventDefault();
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.metaKey && e.altKey) {
+            if (e.key === 'c' || e.key === 'i' || e.key === 'j') {
+                e.preventDefault();
+            }
+            }
+    });
+  </script>
+</body>
+</html>

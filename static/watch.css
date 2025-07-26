@@ -1,0 +1,576 @@
+/* Root variables for theme colors */
+:root {
+    --bg-color: #000000; /* Pure black for the main background */
+    --text-color: #ffffff;
+    --accent-color: #ff416c;
+    --card-bg: #1e1e1e;
+    --button-hover: #ff2e58;
+    --header-bg: #000000; /* Pure black for header */
+    --scrollbar-thumb: #000000; /* Pure black thumb */
+    --scrollbar-track: #1a1a1a; /* Very dark grey for track */
+    --dark-red-hover: #8B0000; /* Dark red on hover */
+}
+
+/* Light theme specific variables */
+[data-theme="light"] {
+    --bg-color: #f0f0f0;
+    --text-color: #333333;
+    --card-bg: #ffffff;
+    --header-bg: #f5f5f5;
+    --scrollbar-thumb: #bbb;
+    --scrollbar-track: #eee;
+}
+
+/* Body base styles */
+body {
+    margin: 0;
+    /* यहां ग्रेडिएंट बैकग्राउंड शामिल किया गया है */
+    background: linear-gradient(to right, #2c004f, #4f002c); /* इमेज से मिलते-जुलते रंगों का ग्रेडिएंट */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    font-family: "Alegreya", serif; /* Alegreya font applied */
+    color: var(--text-color);
+    padding: 0;
+    min-height: 100vh;
+    box-sizing: border-box;
+    transition: background-color 0.3s, color 0.3s;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+/* Custom scrollbar styles for WebKit browsers */
+body::-webkit-scrollbar {
+    width: 12px; /* Wider scrollbar for better visibility */
+}
+body::-webkit-scrollbar-track {
+    background: var(--scrollbar-track); /* Darker track */
+    border-radius: 10px;
+}
+body::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb); /* Pure black thumb */
+    border-radius: 10px;
+    border: 3px solid var(--bg-color); /* Border to match background */
+}
+body::-webkit-scrollbar-thumb:hover {
+    background: var(--dark-red-hover); /* Dark red on hover */
+}
+
+/* Main header styles (Matching Home.css) */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px;
+    border-bottom: none;
+    box-shadow: none;
+    margin: 0;
+    /* यहां हेडर पर भी ग्रेडिएंट बैकग्राउंड शामिल किया गया है */
+    background: linear-gradient(to right, #2c004f, #4f002c); /* इमेज से मिलते-जुलते रंगों का ग्रेडिएंट */
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    height: 130px; /* لوگو کی اونچائی کے مطابق ہیڈر کی اونچائی مقرر کریں */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* ہیڈر میں ہلکا سایہ شامل کریں تاکہ یہ باقی مواد سے الگ نظر آئے */
+}
+
+/* Logo container styles (Matching Home.css) */
+.logo-container {
+    width: 100%;
+    text-align: center;
+    margin: 0 auto;
+    padding-top: 0px;
+}
+
+.logo-container a {
+    display: inline-block;
+    line-height: 0;
+}
+
+/* Logo image styles (Matching Home.css) */
+.logo-container img {
+    width: 150px;
+    height: 130px;
+    transform: scaleX(3);
+    aspect-ratio: auto 235 / 42;
+    box-sizing: border-box;
+    border: 0;
+    vertical-align: middle;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    /* लोगो पर हॉवर इफेक्ट हटाने के लिए ट्रांजीशन और ट्रांसफॉर्म को हटा दिया गया है */
+    transition: none; /* ट्रांजीशन हटा दिया गया */
+    filter: brightness(1.2) contrast(1.1); /* बेहतर नमائش کے لیے برقرار رکھا گیا */
+}
+
+/* Logo hover effect (Matching Home.css) */
+.logo-container img:hover {
+  /* हॉवर पर कोई ट्रांसफॉर्म नहीं */
+  transform: scaleX(3); /* मूल ट्रांसफॉर्म को बरकरार रखें */
+}
+
+/* Overlay styles (if used) */
+.overlay {
+    display: none;
+}
+
+/* Header (ZenkaiWorld title) styles */
+.header {
+    width: 100%;
+    text-align: center;
+    margin-top: 180px;
+    margin-bottom: 30px;
+}
+
+.header a {
+    text-decoration: none;
+    color: var(--accent-color);
+    font-size: 2.5em;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(255, 65, 108, 0.7);
+    font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+/* Main content container styles */
+.container {
+    background-color: var(--card-bg);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(255, 65, 108, 0.4);
+    max-width: 800px;
+    width: 90%;
+    text-align: center;
+    /* फिक्सड हीडर के नीचे مواد کو دھکیلنے کے لیے مارجن ٹاپ شامل کیا گیا */
+    margin: 150px auto 30px auto; /* 150px ہیڈر کی اونچائی اور کچھ اضافی جگہ کے لیے */
+}
+
+/* Anime title styles */
+h2 {
+    color: var(--accent-color);
+    margin-bottom: 20px;
+    font-size: 2em;
+    font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+/* Paragraph text styles */
+p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin-bottom: 25px;
+    font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+/* Download button styles */
+.download-button {
+    display: inline-block;
+    padding: 15px 30px;
+    background-color: #28a745;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 1.2em;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.download-button:hover {
+    background-color: #218838;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Back button styles */
+.back-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #555;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 1em;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+    font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.back-button:hover {
+    background-color: #777;
+}
+
+/* Footer styles */
+footer {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: #888;
+    padding-top: 10px;
+    border-top: 1px solid #333;
+    font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+/* Custom modal overlay styles */
+.custom-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Slightly more transparent */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; 
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    backdrop-filter: blur(5px); /* Blur effect for background */
+    -webkit-backdrop-filter: blur(5px); /* Safari support */
+}
+
+.custom-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Custom modal content styles */
+.custom-modal-content {
+    background-color: var(--card-bg);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(255, 65, 108, 0.5);
+    max-width: 400px; /* Default max-width for general modals */
+    width: 90%;
+    text-align: center;
+    color: var(--text-color);
+    transform: translateY(-20px);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    max-height: 80vh; 
+    overflow-y: auto; 
+    display: flex; /* Flexbox for content alignment */
+    flex-direction: column; /* Stack content vertically */
+    justify-content: space-between; /* Push buttons to bottom if content is short */
+    /* Custom scrollbar for modal content */
+    scrollbar-width: thin; /* For Firefox */
+    scrollbar-color: var(--accent-color) var(--input-bg); /* For Firefox */
+}
+
+/* Webkit scrollbar for custom modal content */
+.custom-modal-content::-webkit-scrollbar {
+  width: 10px;
+}
+
+.custom-modal-content::-webkit-scrollbar-track {
+  background: var(--input-bg); /* Darker track for modal */
+  border-radius: 10px;
+}
+
+.custom-modal-content::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb); /* Pure black thumb */
+  border-radius: 10px;
+  border: 2px solid var(--card-bg); /* Border to match modal background */
+}
+
+.custom-modal-content::-webkit-scrollbar-thumb:hover {
+  background: var(--dark-red-hover); /* Dark red on hover */
+}
+
+
+.custom-modal-overlay.active .custom-modal-content {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.custom-modal-content h3 {
+    color: var(--accent-color);
+    margin-bottom: 20px;
+    font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.custom-modal-content p {
+    margin-bottom: 25px;
+    line-height: 1.5;
+    font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.custom-modal-content .modal-buttons {
+    margin-top: auto; /* Push buttons to the bottom */
+    padding-top: 20px; /* Add some padding above buttons */
+}
+
+.custom-modal-content .modal-buttons button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 0 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.custom-modal-content .modal-ok-btn {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.custom-modal-content .modal-ok-btn:hover {
+    background-color: var(--button-hover);
+    transform: translateY(-2px);
+}
+
+.custom-modal-content .modal-cancel-btn {
+    background-color: #444;
+    color: white;
+}
+
+.custom-modal-content .modal-cancel-btn:hover {
+    background-color: #555;
+    transform: translateY(-2px);
+}
+
+/* Specific styles for the Notice Modal content */
+.notice-modal-content {
+    background-color: #1e1e1e; /* Match card-bg */
+    padding: 20px; /* Slightly reduced padding */
+    border-radius: 10px; /* Slightly less rounded */
+    box-shadow: 0 0 15px rgba(255, 65, 108, 0.5); /* Keep the glow */
+    max-width: 600px; /* Increased max-width to accommodate content */
+    width: 95%; /* Responsive width */
+    text-align: left; /* Align text to left for readability */
+}
+
+.notice-modal-content h3 {
+    text-align: center; /* Center the title */
+    color: var(--accent-color);
+    margin-bottom: 15px;
+    font-size: 1.8em;
+    font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.notice-modal-content h4 {
+    color: var(--text-color);
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 1.2em;
+    font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.notice-modal-content p, .notice-modal-content ul {
+    font-size: 1em;
+    line-height: 1.6;
+    margin-bottom: 10px;
+    color: var(--text-color);
+    font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.notice-modal-content ul {
+    list-style-type: disc;
+    margin-left: 20px;
+    padding-left: 0;
+}
+
+.notice-modal-content ul li {
+    margin-bottom: 5px;
+    font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.notice-modal-content .modal-buttons {
+    text-align: center; /* Center the button */
+    margin-top: 20px; /* Space above the button */
+}
+
+/* Custom scrollbar for Webkit browsers for modal content */
+.custom-modal-content::-webkit-scrollbar {
+  width: 10px;
+}
+
+.custom-modal-content::-webkit-scrollbar-track {
+  background: var(--input-bg); /* Darker track for modal */
+  border-radius: 10px;
+}
+
+.custom-modal-content::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb); /* Pure black thumb */
+  border-radius: 10px;
+  border: 2px solid var(--card-bg); /* Border to match modal background */
+}
+
+.custom-modal-content::-webkit-scrollbar-thumb:hover {
+  background: var(--dark-red-hover); /* Dark red on hover */
+}
+
+/* Laptop/Tablet (Medium Screens) adjustments */
+@media screen and (max-width: 1024px) {
+    body {
+        font-size: 15px; /* Slightly reduced base font size */
+    }
+    .main-header {
+        padding: 0px; /* Keep consistent */
+        height: 110px; /* Adjusted header height */
+    }
+    .logo-container img {
+        width: 130px; /* Slightly smaller logo */
+        height: 110px;
+        /* हॉवर पर कोई ट्रांसफॉर्म नहीं */
+        transform: scaleX(2.8); /* मूल ट्रांसफॉर्म को बरकरार रखें */
+    }
+    .logo-container img:hover {
+        /* हॉवर पर कोई ट्रांसफॉर्म नहीं */
+        transform: scaleX(2.8); /* मूल ट्रांसफॉर्म को बरकरार रखें */
+    }
+    .header {
+        margin-top: 150px; /* Adjusted margin-top for fixed header */
+        margin-bottom: 25px; /* Slightly reduced margin */
+    }
+    .header a {
+        font-size: 2.2em; /* Slightly reduced font size */
+    }
+    .container {
+        padding: 25px; /* Reduced padding */
+        max-width: 700px; /* Slightly reduced max-width */
+        margin: 130px auto 25px auto; /* Adjusted margin for fixed header */
+    }
+    h2 {
+        font-size: 1.8em; /* Slightly reduced font size */
+        margin-bottom: 18px; /* Slightly reduced margin */
+    }
+    p {
+        font-size: 1em; /* Slightly reduced font size */
+        margin-bottom: 20px; /* Slightly reduced margin */
+    }
+    .download-button {
+        font-size: 1.1em; /* Slightly reduced font size */
+        padding: 12px 25px; /* Slightly reduced padding */
+        margin-top: 18px; /* Slightly reduced margin */
+        margin-bottom: 8px; /* Slightly reduced margin */
+    }
+    .back-button {
+        padding: 9px 18px; /* Slightly reduced padding */
+        font-size: 0.95em; /* Slightly reduced font size */
+        margin-top: 18px; /* Slightly reduced margin */
+    }
+    footer {
+        margin-top: 18px; /* Slightly reduced margin */
+        font-size: 0.85em; /* Slightly reduced font size */
+        padding-top: 10px; /* Slightly reduced padding */
+    }
+    .custom-modal-content {
+        padding: 25px; /* Slightly reduced padding */
+        max-width: 350px; /* Slightly reduced max-width */
+    }
+    .custom-modal-content h3 {
+        font-size: 1.3em; /* Slightly reduced font size */
+        margin-bottom: 15px; /* Slightly reduced margin */
+    }
+    .custom-modal-content p {
+        font-size: 1em; /* Slightly reduced font size */
+        margin-bottom: 20px; /* Slightly reduced margin */
+    }
+    .custom-modal-content .modal-buttons button {
+        padding: 10px 20px; /* Slightly reduced padding */
+        font-size: 0.95em; /* Slightly reduced font size */
+        margin: 0 6px; /* Slightly reduced margin */
+    }
+    .notice-modal-content {
+        max-width: 450px; /* Adjusted max-width */
+    }
+    .notice-modal-content ul li {
+        font-size: 0.95em;
+    }
+    #trailerSection {
+        margin-bottom: 18px; /* Slightly reduced margin */
+    }
+}
+
+/* Mobile (Small Screens) adjustments */
+@media screen and (max-width: 768px) {
+    body {
+        font-size: 13px; /* Further reduced base font size */
+    }
+    .main-header {
+        padding: 3px;
+        height: 100px; /* Adjusted header height for mobile */
+    }
+    .logo-container img {
+        width: 110px; /* Further reduced logo width */
+        height: 90px; /* Further reduced logo height */
+        /* हॉवर पर कोई ट्रांसफॉर्म नहीं */
+        transform: scaleX(2.3); /* मूल ट्रांसफॉर्म को बरकरार रखें */
+    }
+    .logo-container img:hover {
+        /* हॉवर पर कोई ट्रांसफॉर्म नहीं */
+        transform: scaleX(2.3); /* मूल ट्रांसफॉर्म को बरकरार रखें */
+    }
+    .header {
+        margin-top: 120px; /* Adjusted margin-top for fixed header */
+        font-size: 2em;
+    }
+    .header a {
+        font-size: 2em;
+    }
+    .container {
+        padding: 15px;
+        margin: 120px auto 15px auto; /* Adjusted margin for fixed header */
+    }
+    h2 {
+        font-size: 1.5em;
+        margin-bottom: 15px;
+    }
+    p {
+        font-size: 0.9em;
+        margin-bottom: 15px;
+    }
+    .download-button {
+        font-size: 0.9em;
+        padding: 10px 20px;
+        margin-top: 15px;
+        margin-bottom: 8px;
+    }
+    .back-button {
+        padding: 8px 15px;
+        font-size: 0.85em;
+        margin-top: 15px;
+    }
+    footer {
+        margin-top: 15px;
+        font-size: 0.75em;
+        padding-top: 8px;
+    }
+    .custom-modal-content {
+        padding: 15px;
+        max-width: 300px;
+    }
+    .custom-modal-content h3 {
+        font-size: 1.1em;
+        margin-bottom: 10px;
+    }
+    .custom-modal-content p {
+        font-size: 0.85em;
+        margin-bottom: 10px;
+    }
+    .custom-modal-content .modal-buttons button {
+        padding: 8px 15px;
+        font-size: 0.85em;
+        margin: 0 4px;
+    }
+    .notice-modal-content {
+        max-width: 350px;
+    }
+    .notice-modal-content ul li {
+        font-size: 0.85em;
+    }
+    #trailerSection {
+        margin-bottom: 15px;
+    }
+}
+
+/* Removed sidebar-active blur/transform as per user request */

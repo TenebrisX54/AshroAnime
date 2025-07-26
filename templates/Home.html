@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <!-- Updated meta viewport for no zoom and fixed width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>ZenkaiWorld</title>
+  <!-- Favicon updated to new URL -->
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/ZnxPMLYj/Icon-ASHRO-ANIME.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Scope+One&display=swap" rel="stylesheet">
+  
+  <!-- Linking the external Home.css file -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='Home.css') }}"> 
+
+</head>
+<body class="home-page" data-theme="dark">
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="spinner"></div>
+    <div class="loading-text">ZenkaiWorld load data please wait a bit time</div> <!-- Changed loading text -->
+  </div>
+
+  <div class="header-and-search-wrapper">
+    <div class="main-header">
+      <div class="hamburger-menu" id="hamburgerMenu">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+      <div class="logo-container">
+        <a href="/"> 
+          <!-- Logo updated to new URL -->
+          <img src="https://i.postimg.cc/rskz7XK2/Logo.png" alt="ZenkaiWorld Logo">
+        </a>
+      </div>
+    </div>
+
+    <div class="search-section">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search">
+      </div>
+    </div>
+
+    <div class="main-filter-buttons-container">
+        <button class="main-filter-button" id="allBtn">All</button>
+        <button class="main-filter-button" id="popularBtn">Popular</button>
+        <button class="main-filter-button" id="latestBtn">Latest</button>
+        <button class="main-filter-button" id="categoriesBtn">Categories</button>
+    </div>
+  </div>
+
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-links-section">
+      <select class="sort-select" onchange="window.sortAnime(this.value); window.hideSidebar();">
+        <option value="default">Sort</option>
+        <option value="az" selected>A-Z</option>
+        <option value="za">Z-A</option>
+      </select>
+      <a href="#" class="control-link" id="nextAnimeLink" onclick="window.showNextAnimeModal(); window.hideSidebar();">Next Anime</a>
+      <a href="/contact" class="control-link"> Contact</a>
+    </div>
+    <div class="sidebar-categories" id="sidebarCategories">
+      </div>
+  </div>
+  <div class="overlay" id="overlay"></div>
+
+  <div class="category-buttons" id="categoryButtons"></div>
+
+  <main>
+    <div class="anime-grid" id="animeGrid">
+        <!-- Initial loading message will be replaced by anime cards -->
+        <p style="text-align: center; color: #888; margin-top: 50px;">Loading anime...</p>
+    </div>
+  </main>
+
+  <div class="action-buttons-container">
+    <button id="loadMoreBtn" class="btn">Load More</button>
+    <button id="suggestAnimeBtn" class="btn" onclick="window.showSuggestAnimeModal()">Upload</button> <!-- Button name changed to Upload -->
+  </div>
+
+  <footer>
+    All anime Hindi dubbed in high quality; I upload only Hindi dubbed anime.
+    <br>
+    &copy; <span id="currentYear"></span> ZenkaiWorld. All rights reserved.
+  </footer>
+
+  <!-- Modal for Next Anime -->
+  <div id="nextAnimeModal" class="custom-modal-overlay">
+    <div class="custom-modal-content">
+      <h3 id="nextAnimeModalTitle">Next Anime Name</h3>
+      <p id="nextAnimeModalMessage"></p>
+      <div class="modal-buttons">
+        <button class="modal-ok-btn" id="nextAnimeModalOkButton">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- New: Modal for Suggest Anime (User Upload) -->
+  <div id="suggestAnimeModal" class="custom-modal-overlay">
+    <div class="custom-modal-content suggest-anime-content"> <!-- Added suggest-anime-content class -->
+      <h3 id="suggestAnimeModalTitle">Suggest New Anime</h3>
+      <form id="suggestAnimeForm" onsubmit="event.preventDefault(); handleSuggestAnime(event);">
+        <div class="form-group">
+          <label for="suggestTitle">Title :</label>
+          <input type="text" id="suggestTitle" required placeholder="Enter anime title">
+        </div>
+
+        <div class="form-group">
+          <label for="suggestCategory">Category:</label>
+          <input type="text" id="suggestCategory" required placeholder="e.g., Action, Comedy, Sci-Fi">
+        </div>
+
+        <div class="form-group">
+          <label for="suggestImage">Image URL:</label>
+          <input type="url" id="suggestImage" required placeholder="Anime thumbnail or image link">
+          <p class="image-url-guidance">Use a direct link to an image file (e.g., ending in .jpg, .png, .webp).</p>
+        </div>
+
+        <div class="form-group">
+          <label for="suggestDownload1080p">Download URL (1080p):</label>
+          <input type="url" id="suggestDownload1080p" required placeholder="e.g., https://example.com/anime_1080p.mp4">
+        </div>
+
+        <div class="form-group">
+          <label for="suggestDownload720p">Download URL (720p - Optional):</label>
+          <input type="url" id="suggestDownload720p" placeholder="e.g., https://example.com/anime_720p.mp4">
+        </div>
+
+        <div class="form-group">
+          <label for="suggestReview">Review/Description:</label>
+          <textarea id="suggestReview" placeholder="Write a short review or description"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="suggestTrailerUrl">Trailer URL (Optional):</label>
+          <input type="url" id="suggestTrailerUrl" placeholder="e.g., https://www.youtube.com/embed/your_trailer_id" onblur="window.convertYoutubeUrl('suggestTrailerUrl')">
+          <p class="image-url-guidance">For YouTube trailers, use an embeddable URL (e.g., https://www.youtube.com/embed/your_trailer_id). If you paste a regular YouTube link, it will attempt to convert automatically.</p>
+        </div>
+        
+        <!-- New: Uploader Name field for Suggest Anime (User input) -->
+        <div class="form-group">
+          <label for="suggestUploaderName">Your Name (Uploader):</label>
+          <input type="text" id="suggestUploaderName" required placeholder="Enter your name">
+        </div>
+
+        <div class="modal-buttons">
+          <button type="submit" class="modal-ok-btn">Submit Suggestion</button>
+          <button type="button" class="modal-cancel-btn" id="suggestAnimeModalCancelButton">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Custom Alert/Confirm Modal (existing, reused) -->
+  <div id="customMessageModal" class="custom-modal-overlay">
+    <div class="custom-modal-content">
+      <h3 id="modalTitle"></h3>
+      <p id="modalMessage"></p>
+      <div class="modal-buttons">
+        <button class="modal-ok-btn" id="modalOkButton">OK</button>
+        <button class="modal-cancel-btn" id="modalCancelButton" style="display:none;">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+
+    const API_BASE_URL = 'http://127.0.0.1:5000'; 
+
+    let animeList = []; // Stores all fetched anime data
+    let animeGrid; // Reference to the div where anime cards are displayed
+    let searchInput; // Reference to the search input field
+    let categoryButtons; // Reference to the div for category buttons (if used)
+    let sidebarCategories; // Reference to the div for sidebar categories
+
+    let nextAnimeModal; // Reference to the next anime modal overlay
+    let nextAnimeModalTitle; // Reference to the next anime modal title
+    let nextAnimeModalMessage; // Reference to the next anime modal message
+    let nextAnimeModalOkButton; // Reference to the OK button in the next anime modal
+    let currentNextAnimeName = "No Next Anime Set"; // Stores the name of the next anime, now fetched from DB
+
+    let displayedCount = 0; // Counter for currently displayed anime cards
+    const batchSize = 8; // Number of anime to load per batch
+    let currentFilteredAnimeList = []; // List of anime currently being filtered/sorted
+
+    let sidebar; // Reference to the sidebar element
+    let hamburgerMenu; // Reference to the hamburger menu icon
+    let overlay; // Reference to the overlay element
+
+    let allBtn; // Reference to the "All" filter button
+    let popularBtn; // Reference to the "Popular" filter button
+    let latestBtn; // Reference to the "Latest" filter button
+    let categoriesBtn; // Reference to the "Categories" filter button
+
+    // New: Elements for Suggest Anime Modal
+    let suggestAnimeModal;
+    let suggestAnimeForm;
+    let suggestAnimeModalCancelButton;
+
+    // Custom Alert/Confirm Modal elements (reused from admin.html logic)
+    let customMessageModal;
+    let modalTitle;
+    let modalMessage;
+    let modalOkButton;
+    let modalCancelButton;
+    
+    // Preloader element
+    let preloader;
+    let contentLoaded = false; // Flag to check if content is loaded
+    const MIN_LOAD_TIME = 500; // Minimum 3 seconds for preloader
+
+    // Function to escape HTML characters to prevent XSS
+    function escapeHTML(str) {
+        const div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+    }
+
+    // Function for custom alerts (reused from admin.html logic)
+    window.showAlert = function(title, message) {
+      if (!customMessageModal || !modalTitle || !modalMessage || !modalOkButton) {
+        console.error("Custom modal elements not found, falling back to console log for alert.");
+        console.log(`${title}: ${message}`);
+        return Promise.resolve(true); // Resolve immediately if modal not ready
+      }
+      modalTitle.textContent = title;
+      modalMessage.textContent = message;
+      modalOkButton.style.display = 'block';
+      if (modalCancelButton) modalCancelButton.style.display = 'none'; // Ensure cancel button is hidden for alerts
+      customMessageModal.classList.add('active');
+      return new Promise(resolve => {
+        modalOkButton.onclick = () => {
+          customMessageModal.classList.remove('active');
+          resolve(true);
+        };
+      });
+    };
+
+    // Function to convert YouTube watch URL to embed URL (reused from admin.html logic)
+    window.convertYoutubeUrl = function(inputId) {
+        const inputElement = document.getElementById(inputId);
+        let url = inputElement.value.trim();
+        if (!url) return;
+
+        const youtubeWatchRegex = /(?:https?:\/\/)?(?:www\.)?(?:m\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/|v\/|)([\w-]{11})(?:\S+)?/i;
+        const match = url.match(youtubeWatchRegex);
+
+        if (match && match[1]) {
+            const videoId = match[1];
+            const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+            if (url !== embedUrl) { // Only update if different
+                inputElement.value = embedUrl;
+                window.showAlert('URL Converted', 'YouTube link has been converted to embed format.');
+            }
+        } else if (!url.startsWith('https://www.youtube.com/embed/') && url !== '') {
+            // If it's not a YouTube URL or not an embed URL, warn the user
+            window.showAlert('Invalid Format', 'This does not appear to be a valid YouTube embed URL. Please use "https://www.youtube.com/embed/VIDEO_ID" format.');
+        }
+    };
+
+    // Function to fetch anime data from Flask backend
+    async function fetchAnimeData() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/anime`);
+            if (!response.ok) {
+                const errorText = await response.text(); 
+                let errorMessage = `Network response was not ok. Status: ${response.status} ${response.statusText}`;
+                try {
+                    const errorJson = JSON.parse(errorText);
+                    errorMessage = errorJson.error || errorMessage;
+                } catch (e) {
+                    errorMessage = `Server error: ${errorText || response.statusText}`;
+                }
+                throw new Error(errorMessage);
+            }
+            const data = await response.json();
+            return data;
+        } catch (err) {
+            console.error('Error fetching anime data:', err.message);
+            window.showAlert('Error', `Failed to load anime data: ${err.message}. Please ensure your Flask backend is running on ${API_BASE_URL}.`);
+            return [];
+        }
+    }
+
+    // Function to fetch the latest "Next Anime" from Flask backend
+    async function fetchNextAnime() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/next_anime`);
+            if (!response.ok) {
+                const errorText = await response.text(); 
+                let errorMessage = `Network response was not ok. Status: ${response.status} ${response.statusText}`;
+                try {
+                    const errorJson = JSON.parse(errorText);
+                    errorMessage = errorJson.error || errorMessage;
+                } catch (e) {
+                    errorMessage = `Server error: ${errorText || response.statusText}`;
+                }
+                throw new Error(errorMessage);
+            }
+            const data = await response.json();
+            return data.anime_name || "No Next Anime Set";
+        } catch (err) {
+            console.error('Error fetching next anime:', err.message);
+            window.showAlert('Error', `Failed to load Next Anime: ${err.message}. Please ensure your Flask backend is running on ${API_BASE_URL}.`);
+            return "No Next Anime Set";
+        }
+    }
+
+    // Function to handle anime suggestion/upload via Flask backend
+    async function handleSuggestAnime(event) {
+      event.preventDefault(); // Prevent default form submission
+
+      const title = document.getElementById('suggestTitle').value.trim();
+      const category = document.getElementById('suggestCategory').value.trim();
+      const image = document.getElementById('suggestImage').value.trim();
+      const download1080p = document.getElementById('suggestDownload1080p').value.trim();
+      const download720p = document.getElementById('suggestDownload720p').value.trim();
+      const review = document.getElementById('suggestReview').value.trim();
+      const trailerUrl = document.getElementById('suggestTrailerUrl').value.trim();
+      const uploaderName = document.getElementById('suggestUploaderName').value.trim(); // Get uploader name from input
+
+      if (!title || !category || !image || !download1080p || !review || !uploaderName) {
+          window.showAlert('Validation Error', 'Please fill in all required fields (Title, Category, Image URL, 1080p Download URL, Review, Your Name).');
+          return;
+      }
+
+      const animeData = {
+          title,
+          category,
+          image,
+          download1080p,
+          download720p: download720p || null, // Send null if 720p is empty
+          review,
+          trailerUrl: trailerUrl || null, // Send null if trailerUrl is empty
+          uploader_name: uploaderName // Add uploader name
+      };
+
+      try {
+          const response = await fetch(`${API_BASE_URL}/api/upload_anime`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(animeData)
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+              window.showAlert('Success', result.message || 'Anime uploaded successfully!');
+              window.hideSuggestAnimeModal(); // Hide modal on success
+              // Optionally, refetch anime list to show the new anime
+              animeList = await fetchAnimeData();
+              currentFilteredAnimeList = [...animeList];
+              sortAndDisplayCurrentFilteredList('az');
+          } else {
+              throw new Error(result.error || 'Failed to upload anime.');
+          }
+      } catch (error) {
+          console.error('Error uploading anime:', error);
+          window.showAlert('Upload Failed', `Failed to upload anime: ${error.message}. Please try again.`);
+      }
+    }
+
+
+    // Function to get all unique categories from the anime list
+    function getAllCategories() {
+      const categories = new Set();
+      animeList.forEach(anime => {
+        if (anime.category && typeof anime.category === 'string') {
+          anime.category.split(',').forEach(cat => {
+            const trimmedCat = cat.trim();
+            if (trimmedCat) {
+              categories.add(trimmedCat);
+            }
+          });
+        }
+      });
+      return Array.from(categories).sort();
+    }
+
+    // Function to create and populate category buttons in the sidebar
+    function createCategoryButtons() {
+      if (!sidebarCategories) {
+        console.error("Error: sidebarCategories element not found. Skipping sidebar category creation.");
+        return;
+      }
+
+      sidebarCategories.innerHTML = ''; // Clear existing buttons
+
+      // Create "All" button for sidebar
+      const allBtnSidebar = document.createElement('button');
+      allBtnSidebar.textContent = 'All';
+      allBtnSidebar.classList.add('active'); // Set as active by default
+      allBtnSidebar.onclick = () => {
+        setActiveCategoryButton(allBtnSidebar, 'sidebar');
+        currentFilteredAnimeList = [...animeList]; // Reset to all anime
+        sortAndDisplayCurrentFilteredList('az'); // Sort and display
+        window.hideSidebar(); // Hide sidebar after selection
+      };
+      sidebarCategories.appendChild(allBtnSidebar);
+
+      // Create buttons for other categories
+      const categories = getAllCategories();
+      categories.forEach(category => {
+        const button = document.createElement('button');
+        button.textContent = category;
+        button.onclick = () => {
+          setActiveCategoryButton(button, 'sidebar');
+          currentFilteredAnimeList = animeList.filter(anime => 
+            anime.category && anime.category.toLowerCase().includes(category.toLowerCase())
+          );
+          sortAndDisplayCurrentFilteredList('az');
+          window.hideSidebar();
+        };
+        sidebarCategories.appendChild(button);
+      });
+    }
+
+    // Function to set the active state for category buttons
+    function setActiveCategoryButton(activeBtn, location) {
+      if (!sidebarCategories) {
+          console.error("Error: Sidebar categories element not found in setActiveCategoryButton.");
+          return;
+          }
+
+      const sidebarButtons = sidebarCategories.querySelectorAll('button');
+      sidebarButtons.forEach(btn => {
+        btn.classList.remove('active'); // Remove active class from all buttons
+      });
+
+      activeBtn.classList.add('active'); // Add active class to the clicked button
+    }
+
+    // Function to display anime cards in the grid
+    function displayAnime(list) {
+      animeGrid.innerHTML = ''; // Clear the grid
+      displayedCount = 0; // Reset displayed count
+      loadNextBatch(list); // Load the first batch
+
+      const loadMoreBtn = document.getElementById('loadMoreBtn');
+      if (loadMoreBtn) {
+        loadMoreBtn.onclick = () => loadNextBatch(list); // Set click handler for load more
+        if (list.length > batchSize) {
+            loadMoreBtn.style.display = 'inline-block'; // Show if more items exist
+        } else {
+            loadMoreBtn.style.display = 'none'; // Hide if no more items
+        }
+      }
+    }
+
+    // Function to load the next batch of anime cards
+    function loadNextBatch(list) {
+      const loadMoreBtn = document.getElementById('loadMoreBtn');
+      const nextBatch = list.slice(displayedCount, displayedCount + batchSize);
+
+      if (nextBatch.length === 0 && displayedCount === 0) {
+          // No anime found at all
+          animeGrid.innerHTML = '<p style="text-align: center; color: #888; margin-top: 50px;">No anime found. Please check back later.</p>';
+          if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+          return;
+      } else if (nextBatch.length === 0) {
+          // No more anime to load in subsequent batches
+          if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+          return;
+      }
+
+      nextBatch.forEach(anime => {
+        // Add robust checks for anime object and its properties
+        if (!anime || typeof anime !== 'object') {
+            console.error("Skipping invalid anime object:", anime);
+            return; // Skip this iteration if anime is not a valid object
+        }
+
+        const card = document.createElement('div');
+        card.className = 'anime-card';
+
+        // Determine if anime is popular based on is_popular field
+        const isPopular = anime.is_popular === true; 
+
+        // Use a placeholder image if no valid image URL is provided
+        const titleForPlaceholder = (anime.title && typeof anime.title === 'string' && anime.title.trim() !== '') ? anime.title : "No Title";
+        const imageUrl = (anime.image && typeof anime.image === 'string' && anime.image.startsWith('http'))
+          ? anime.image
+          : `https://placehold.co/300x400/2a2a2a/ffffff?text=${encodeURIComponent(titleForPlaceholder)}`;
+
+        const displayTitle = (anime.title && typeof anime.title === 'string' && anime.title.trim() !== '') ? anime.title : "No Title";
+        const displayCategory = (anime.category && typeof anime.category === 'string' && anime.category.trim() !== '') ? anime.category : "No Category";
+        // Uploader Name removed as per request
+        // const displayUploaderName = (anime.uploader_name && typeof anime.uploader_name === 'string' && anime.uploader_name.trim() !== '') ? anime.uploader_name : "Unknown";
+
+
+        // Construct the download URL for watch.html, passing relevant details
+        // Ensure anime._id is passed for Watch.html to fetch full details
+        const animeId = anime._id || ''; // Get MongoDB _id
+        // Download links are not directly used in the card anymore, but passed to watch page
+        // const downloadLink1080p = (anime.download1080p && typeof anime.download1080p === 'string') ? anime.download1080p : '#';
+        // const downloadLink720p = (anime.download720p && typeof anime.download720p === 'string') ? anime.download720p : '';
+        // const trailerUrl = (anime.trailerUrl && typeof anime.trailerUrl === 'string') ? anime.trailerUrl : '';
+
+        card.innerHTML = `
+          ${isPopular ? '<div class="popular-badge">🔥 Trending</div>' : ''}
+          <img class="anime-image lazy-load" data-src="${imageUrl}" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="${escapeHTML(displayTitle)}"
+               onerror="this.onerror=null;this.src='https://placehold.co/300x400/2a2a2a/ffffff?text=Image+Not+Found';" loading="lazy">
+          <a class="anime-title-link" href="/watch?anime_id=${encodeURIComponent(animeId)}">${escapeHTML(displayTitle)}</a> <!-- Full name as clickable link -->
+          <div class="anime-category">${escapeHTML(displayCategory)}</div>
+          <!-- Uploader Name div removed as per request -->
+          <!-- Download button removed as per request -->
+        `;
+        animeGrid.appendChild(card);
+      });
+
+      displayedCount += nextBatch.length; // Update displayed count
+      observeImages(); // Start observing new images for lazy loading
+
+      if (loadMoreBtn) {
+        if (displayedCount >= list.length) {
+          loadMoreBtn.style.display = 'none'; // Hide if all items are displayed
+        } else {
+          loadMoreBtn.style.display = 'inline-block'; // Show if more items are available
+        }
+      }
+    }
+
+    // Function to sort the current filtered anime list and then display it
+    function sortAndDisplayCurrentFilteredList(order) {
+        if (order === 'az') {
+            currentFilteredAnimeList.sort((a, b) => a.title.localeCompare(b.title));
+        } else if (order === 'za') {
+            currentFilteredAnimeList.sort((a, b) => b.title.localeCompare(a.title));
+        } else if (order === 'latest') { // Added 'latest' sorting
+            currentFilteredAnimeList.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        } else if (order === 'popular') { // Added 'popular' sorting
+            currentFilteredAnimeList.sort((a, b) => (b.is_popular ? 1 : 0) - (a.is_popular ? 1 : 0)); // Sort by popular first
+        }
+        // For 'default', we'll just display as is if not 'az' or 'za'
+        displayAnime(currentFilteredAnimeList);
+    }
+
+    // Event handler for search input
+    function handleSearchInput() {
+      const keyword = this.value.trim().toLowerCase();
+      currentFilteredAnimeList = animeList.filter(anime =>
+        (anime.title && anime.title.toLowerCase().includes(keyword)) ||
+        (anime.category && anime.category.toLowerCase().includes(keyword))
+      );
+      sortAndDisplayCurrentFilteredList('az'); 
+
+      if (sidebarCategories) {
+        const allBtnSidebar = sidebarCategories.querySelector('button');
+        if (allBtnSidebar) {
+          setActiveCategoryButton(allBtnSidebar, 'sidebar');
+        }
+      }
+    }
+
+    // Global function to sort anime based on selected order
+    window.sortAnime = function(order) {
+        sortAndDisplayCurrentFilteredList(order);
+    }
+
+    // Function to show the sidebar
+    window.showSidebar = function() {
+      sidebar.classList.add('active');
+      overlay.classList.add('active');
+      hamburgerMenu.style.opacity = '0'; // Hide hamburger menu
+      hamburgerMenu.style.pointerEvents = 'none'; // Disable clicks on hamburger menu
+      document.body.classList.add('sidebar-active'); // Add class to body for blur/shine effect
+    }
+
+    // Function to hide the sidebar
+    window.hideSidebar = function() {
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+      hamburgerMenu.style.opacity = '1'; // Show hamburger menu
+      hamburgerMenu.style.pointerEvents = 'auto'; // Enable clicks on hamburger menu
+      document.body.classList.remove('sidebar-active'); // Remove class from body
+    }
+
+    let observer; // Intersection Observer instance for lazy loading
+
+    // Function to set up Intersection Observer for lazy loading images
+    function observeImages() {
+        if ('IntersectionObserver' in window) {
+            if (!observer) {
+                observer = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            const src = img.dataset.src;
+                            if (src) {
+                                img.src = src; // Load image
+                                img.classList.remove('lazy-load'); // Remove lazy-load class
+                                observer.unobserve(img); // Stop observing
+                            }
+                        }
+                    });
+                }, {
+                    rootMargin: '0px 0px 400px 0px' // Load images when they are 400px away from viewport
+                });
+            }
+            document.querySelectorAll('.lazy-load').forEach(img => {
+                observer.observe(img); // Observe all lazy-load images
+            });
+        } else {
+            // Fallback for browsers thats don't support Intersection Observer
+            document.querySelectorAll('.lazy-load').forEach(img => {
+                const src = img.dataset.src;
+                if (src) {
+                    img.src = src;
+                    img.classList.remove('lazy-load');
+                }
+            });
+        }
+    }
+
+    // New: Function to show the Suggest Anime modal
+    window.showSuggestAnimeModal = function() {
+      if (suggestAnimeModal) {
+        suggestAnimeModal.classList.add('active');
+      } else {
+        console.error("Suggest Anime Modal element not found.");
+      }
+    };
+
+    // New: Function to hide the Suggest Anime modal
+    window.hideSuggestAnimeModal = function() {
+      if (suggestAnimeModal) {
+        suggestAnimeModal.classList.remove('active');
+        suggestAnimeForm.reset(); // Clear form fields on close
+      }
+    };
+
+
+    // Initialize elements and event listeners when the DOM is ready
+    document.addEventListener('DOMContentLoaded', async () => {
+      preloader = document.getElementById('preloader');
+
+      animeGrid = document.getElementById('animeGrid');
+      searchInput = document.getElementById('searchInput');
+      categoryButtons = document.getElementById('categoryButtons'); 
+      sidebarCategories = document.getElementById('sidebarCategories');
+
+      sidebar = document.getElementById('sidebar');
+      hamburgerMenu = document.getElementById('hamburgerMenu');
+      overlay = document.getElementById('overlay');
+
+      allBtn = document.getElementById('allBtn');
+      popularBtn = document.getElementById('popularBtn');
+      latestBtn = document.getElementById('latestBtn');
+      categoriesBtn = document.getElementById('categoriesBtn');
+
+      nextAnimeModal = document.getElementById('nextAnimeModal');
+      nextAnimeModalTitle = document.getElementById('nextAnimeModalTitle');
+      nextAnimeModalMessage = document.getElementById('nextAnimeModalMessage');
+      nextAnimeModalOkButton = document.getElementById('nextAnimeModalOkButton');
+
+      // New: Initialize Suggest Anime Modal elements
+      suggestAnimeModal = document.getElementById('suggestAnimeModal');
+      suggestAnimeForm = document.getElementById('suggestAnimeForm');
+      suggestAnimeModalCancelButton = document.getElementById('suggestAnimeModalCancelButton');
+
+      // Custom Alert/Confirm Modal elements
+      customMessageModal = document.getElementById("customMessageModal");
+      modalTitle = document.getElementById("modalTitle");
+      modalMessage = document.getElementById("modalMessage");
+      modalOkButton = document.getElementById("modalOkButton");
+      modalCancelButton = document.getElementById("modalCancelButton"); 
+      
+      // Event listeners for sidebar toggle
+      if (hamburgerMenu) {
+        hamburgerMenu.addEventListener('click', window.showSidebar);
+      }
+      if (overlay) {
+        overlay.addEventListener('click', window.hideSidebar);
+      }
+
+      // Event listener for "Categories" button to show sidebar
+      if (categoriesBtn) {
+          categoriesBtn.addEventListener('click', window.showSidebar);
+      }
+
+      // Event listeners for main filter buttons
+      if (allBtn) {
+          allBtn.addEventListener('click', () => {
+              currentFilteredAnimeList = [...animeList]; 
+              sortAndDisplayCurrentFilteredList('az'); 
+          });
+      }
+
+      if (popularBtn) {
+          popularBtn.addEventListener('click', () => {
+              currentFilteredAnimeList = animeList.filter(anime => anime.is_popular);
+              sortAndDisplayCurrentFilteredList('popular'); 
+          });
+      }
+
+      if (latestBtn) {
+          latestBtn.addEventListener('click', () => {
+              currentFilteredAnimeList = animeList.filter(anime => anime.is_latest);
+              sortAndDisplayCurrentFilteredList('latest'); 
+          });
+      }
+
+
+      if (nextAnimeModalOkButton) {
+          nextAnimeModalOkButton.onclick = () => {
+              nextAnimeModal.classList.remove('active'); // Hide modal on OK click
+          };
+      }
+
+      // New: Event listener for Suggest Anime form submission
+      if (suggestAnimeForm) {
+        suggestAnimeForm.addEventListener('submit', handleSuggestAnime);
+      }
+      // New: Event listener for Suggest Anime modal cancel button
+      if (suggestAnimeModalCancelButton) {
+        suggestAnimeModalCancelButton.addEventListener('click', window.hideSuggestAnimeModal);
+      }
+
+
+      searchInput.addEventListener('input', handleSearchInput);
+
+      // Set default theme
+      document.body.setAttribute('data-theme', 'dark');
+
+      // Fetch anime data from Flask backend
+      animeList = await fetchAnimeData();
+      currentFilteredAnimeList = [...animeList]; // Initialize filtered list with all anime
+      createCategoryButtons(); // Create category buttons based on fetched data
+      sortAndDisplayCurrentFilteredList('az'); // Sort and display initial data
+
+      // Fetch Next Anime details from Flask backend
+      currentNextAnimeName = await fetchNextAnime();
+      // Update the Next Anime link text in sidebar if needed
+      const nextAnimeLink = document.getElementById('nextAnimeLink');
+      if (nextAnimeLink) {
+          nextAnimeLink.textContent = `Next Anime (${currentNextAnimeName})`;
+      }
+
+
+      contentLoaded = true; // Mark content as loaded
+
+      // Show "Load More" button after initial load
+      setTimeout(() => {
+        document.getElementById("loadMoreBtn")?.classList.add("show");
+      }, 500);
+
+      // Set current year in footer
+      document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+      // Placeholder for animation logic (no specific animation applied here)
+      document.querySelectorAll(
+        '.hamburger-menu, .logo-container a, .main-filter-button, .sidebar-links-section a, .sidebar-categories button, .btn, .modal-buttons button, .anime-card img'
+      ).forEach(element => {
+        element.addEventListener('click', (e) => {
+          // No animation logic implemented here
+        });
+      });
+
+      // Hide preloader after MIN_LOAD_TIME or when content is loaded, whichever is later
+      const startTime = Date.now();
+      const checkAndHidePreloader = () => {
+          const elapsedTime = Date.now() - startTime;
+          if (contentLoaded && elapsedTime >= MIN_LOAD_TIME) {
+              preloader.classList.add('hidden');
+              document.body.classList.add('loaded'); // Add class to show content
+          } else if (contentLoaded) {
+              // If content is loaded but min time not passed, wait for remaining time
+              setTimeout(() => {
+                  preloader.classList.add('hidden');
+                  document.body.classList.add('loaded');
+              }, MIN_LOAD_TIME - elapsedTime);
+          } else {
+              // If content not loaded yet, check again soon
+              setTimeout(checkAndHidePreloader, 100);
+          }
+      };
+      checkAndHidePreloader(); // Start checking
+    });
+
+    // Function to show the "Next Anime" modal
+    window.showNextAnimeModal = function() { 
+      if (!nextAnimeModal || !nextAnimeModalTitle || !nextAnimeModalMessage || !nextAnimeModalOkButton) {
+          console.error("Next Anime Modal elements not found.");
+          console.error("Next Anime information is not available at the moment.");
+          return;
+      }
+
+      if (!currentNextAnimeName || currentNextAnimeName === "No Next Anime Set") {
+        nextAnimeModalTitle.textContent = "No Next Anime Set";
+        nextAnimeModalMessage.innerHTML = `Our next anime name is not yet available. Please check back later!`;
+      } else {
+        nextAnimeModalTitle.textContent = "Next Anime Coming Soon!";
+        nextAnimeModalMessage.innerHTML = `Our next exciting anime will be: <strong>${escapeHTML(currentNextAnimeName)}</strong>! Stay tuned for updates.`;
+      }
+      nextAnimeModal.classList.add('active'); // Show the modal
+
+      nextAnimeModalOkButton.onclick = () => {
+        nextAnimeModal.classList.remove('active'); // Hide modal on OK click
+      };
+    }
+  </script>
+  <script>
+    // Prevent context menu (right-click)
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+
+    // Prevent developer tools access via keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+      if (
+        e.key === "F12" ||
+        (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+        (e.ctrlKey && e.shiftKey && e.key === 'J') ||
+        (e.ctrlKey && e.key === 'U') ||
+        (e.metaKey && e.altKey && e.key === 'i') ||
+        (e.metaKey && e.altKey && e.key === 'j') ||
+        (e.metaKey && e.altKey && e.key === 'c')
+      ) {
+        e.preventDefault();
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.metaKey && e.altKey) {
+            if (e.key === 'c' || e.key === 'i' || e.key === 'j') {
+                e.preventDefault();
+            }
+        }
+    });
+  </script>
+
+</body>
+</html>

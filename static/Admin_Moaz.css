@@ -1,0 +1,465 @@
+/* Root variables for theme colors */
+:root {
+  --bg-color: #000000; /* Pure black for the main background */
+  --text-color: #ffffff;
+  --accent-color: #ff416c;
+  --card-bg: #1e1e1e;
+  --input-bg: #2a2a2a;
+  --button-hover: #ff2e58;
+  --header-bg: #000000; /* Pure black for header */
+  --search-section-bg: #000000; /* Pure black for search section */
+  --sidebar-bg: #000000; /* Pure black for sidebar (if applicable) */
+  --sidebar-link-hover: #3a3a3a;
+  --scrollbar-thumb: #000000; /* Pure black thumb */
+  --scrollbar-track: #1a1a1a; /* Very dark grey for track */
+  --dark-red-hover: #8B0000; /* Dark red on hover */
+}
+
+/* Light theme specific variables */
+[data-theme="light"] {
+  --bg-color: #f0f0f0;
+  --text-color: #333333;
+  --card-bg: #ffffff;
+  --input-bg: #e0e0e0;
+  --header-bg: #f5f5f5;
+  --search-section-bg: #e5e5e5;
+  --sidebar-bg: #ffffff;
+  --sidebar-link-hover: #f0f0f0;
+  --scrollbar-thumb: #bbb;
+  --scrollbar-track: #eee;
+}
+
+/* Body base styles */
+body {
+  margin: 0;
+  /* यहां ग्रेडिएंट बैकग्राउंड शामिल किया गया है */
+  background: linear-gradient(to right, #2c004f, #4f002c); /* इमेज से मिलते-जुलते रंगों का ग्रेडिएंट */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+  color: var(--text-color);
+  padding: 0;
+  transition: background-color 0.3s, color 0.3s;
+  line-height: 1.6;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+    
+/* Custom scrollbar styles for WebKit browsers */
+body::-webkit-scrollbar {
+  width: 12px; /* Wider scrollbar for better visibility */
+}
+body::-webkit-scrollbar-track {
+  background: var(--scrollbar-track); /* Darker track */
+  border-radius: 10px;
+}
+body::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb); /* Pure black thumb */
+  border-radius: 10px;
+  border: 3px solid var(--bg-color); /* Border to match background */
+}
+body::-webkit-scrollbar-thumb:hover {
+  background: var(--dark-red-hover); /* Dark red on hover */
+}
+
+/* Main header styles */
+.main-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px 20px;
+  /* यहां हेडर पर भी ग्रेडिएंट बैकग्राउंड शामिल किया गया है */
+  background: linear-gradient(to right, #2c004f, #4f002c); /* इमेज से मिलते-जुलते रंगों का ग्रेडिएंट */
+  border-bottom: none; 
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  width: 100%;
+}
+
+/* Logo container styles */
+.logo-container {
+  flex-grow: 0;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+}
+
+.logo-container a {
+  display: inline-block;
+  line-height: 0;
+}
+
+.logo-container img {
+  display: block;
+  width: 450px;
+  height: auto;
+  max-height: 120px;
+  margin: 0 auto;
+  /* लोगो पर हॉवर इफेक्ट हटाने के लिए ट्रांजीशन और ट्रांसफॉर्म को हटा दिया गया है */
+  transition: none; /* ट्रांजीशन हटा दिया गया */
+}
+    
+/* लोगो पर हॉवर इफेक्ट हटाने के लिए */
+.logo-container img:hover {
+  transform: none; /* कोई ट्रांसफॉर्म नहीं */
+}
+
+/* Overlay styles (if used) */
+.overlay {
+  display: none;
+}
+
+/* Page title styles - REMOVED */
+h1 {
+  display: none; /* Hide the h1 element */
+}
+
+/* Admin container styles */
+.admin-container {
+  background-color: var(--card-bg);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(255, 65, 108, 0.4);
+  max-width: 800px;
+  width: 90%;
+  text-align: center;
+  margin-top: 30px;
+  flex-grow: 1;
+}
+
+/* Section heading styles */
+h2 {
+  color: var(--accent-color);
+  margin-bottom: 25px;
+  font-size: 2em;
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+/* Admin actions button grid styles */
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.admin-actions button {
+  padding: 15px 25px;
+  border-radius: 10px;
+  border: none;
+  background-color: #555;
+  color: white;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.admin-actions button:hover {
+  background-color: var(--accent-color);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* Individual admin section styles */
+.admin-section {
+    background-color: var(--input-bg);
+    padding: 25px;
+    border-radius: 10px;
+    margin-top: 25px;
+    text-align: left;
+    display: none; /* Hidden by default */
+}
+
+/* Show active section */
+.admin-section:not(.hidden) {
+    display: block;
+}
+
+/* Form group styles */
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+/* Input and textarea styles */
+.form-group input[type="text"],
+.form-group input[type="url"],
+.form-group input[type="number"],
+.form-group textarea,
+.form-group select {
+  width: calc(100% - 24px); 
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  font-size: 1em;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--accent-color);
+}
+
+.form-group textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+/* Form submit button styles */
+.form-submit-button {
+    padding: 12px 20px;
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 15px;
+    font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.form-submit-button:hover {
+    background-color: var(--button-hover);
+    transform: translateY(-2px);
+}
+
+/* Clear button specific style */
+.form-submit-button.clear-button {
+  background-color: #dc3545; /* Red color for clear */
+  margin-left: 10px;
+}
+
+.form-submit-button.clear-button:hover {
+  background-color: #c82333; /* Darker red on hover */
+}
+
+/* Back to options button styles */
+.back-to-options-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #555;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 1em;
+  margin-top: 30px;
+  transition: background-color 0.3s ease;
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.back-to-options-button:hover {
+  background-color: #777;
+}
+
+/* Footer styles */
+footer {
+  width: 100%;
+  text-align: center;
+  margin-top: 50px;
+  font-size: 0.9em;
+  color: #888;
+  padding-top: 20px;
+  border-top: 1px solid #333;
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+/* Custom modal overlay styles */
+.custom-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* Slightly more transparent */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; 
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  backdrop-filter: blur(5px); /* Blur effect for background */
+  -webkit-backdrop-filter: blur(5px); /* Safari support */
+}
+
+.custom-modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Custom modal content styles */
+.custom-modal-content {
+  background-color: var(--card-bg); 
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(255, 65, 108, 0.5);
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  color: var(--text-color); 
+  transform: translateY(-20px);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  max-height: 80vh; 
+  overflow-y: auto; 
+  /* Custom scrollbar for modal content */
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: var(--accent-color) var(--input-bg); /* For Firefox */
+}
+
+/* Webkit scrollbar for custom modal content */
+.custom-modal-content::-webkit-scrollbar {
+  width: 10px;
+}
+
+.custom-modal-content::-webkit-scrollbar-track {
+  background: var(--input-bg); /* Darker track for modal */
+  border-radius: 10px;
+}
+
+.custom-modal-content::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb); /* Pure black thumb */
+  border-radius: 10px;
+  border: 2px solid var(--card-bg); /* Border to match modal background */
+}
+
+.custom-modal-content::-webkit-scrollbar-thumb:hover {
+  background: var(--dark-red-hover); /* Dark red on hover */
+}
+
+
+.custom-modal-overlay.active .custom-modal-content {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.custom-modal-content h3 {
+  color: var(--accent-color);
+  margin-bottom: 20px;
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.custom-modal-content p {
+  margin-bottom: 25px;
+  line-height: 1.5;
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.custom-modal-content .modal-buttons button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 0 8px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.custom-modal-content .modal-ok-btn {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.custom-modal-content .modal-ok-btn:hover {
+  background-color: var(--button-hover);
+  transform: translateY(-2px);
+}
+.custom-modal-content .modal-cancel-btn {
+  background-color: #555;
+  color: white;
+}
+
+.custom-modal-content .modal-cancel-btn:hover {
+  background-color: #777;
+  transform: translateY(-2px);
+}
+.image-url-guidance {
+    font-size: 0.85em;
+    color: #aaa;
+    margin-top: 5px;
+    text-align: left;
+    font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+/* Styling for lists within sections (e.g., delete anime list) */
+.anime-list-container ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 300px; /* Limit height for scrollability */
+    overflow-y: auto; /* Enable scrolling */
+    border: 1px solid var(--card-bg);
+    border-radius: 8px;
+    background-color: var(--card-bg);
+    padding: 10px;
+    font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.anime-list-container li {
+    padding: 8px 0;
+    border-bottom: 1px solid #333;
+    display: flex;
+    align-items: center;
+    color: var(--text-color);
+    font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.anime-list-container li:last-child {
+    border-bottom: none;
+}
+
+.anime-list-container li input[type="checkbox"] {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.anime-list-container li label {
+    flex-grow: 1;
+    cursor: pointer;
+}
+
+/* Error message styling */
+.error-message {
+    color: #ff416c; /* Accent color for errors */
+    font-weight: bold;
+    margin-top: 15px;
+    font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+/* Utility class to hide elements */
+.hidden {
+    display: none !important;
+}
+
+
+/* Media queries for responsiveness */
+@media screen and (max-width: 768px) {
+  .main-header {
+    padding: 10px;
+  }
+}
+
+/* Removed sidebar-active blur/transform as per user request */

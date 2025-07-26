@@ -1,0 +1,1073 @@
+/* Root variables for theme colors */
+:root {
+  --bg-color: #000000; /* Pure black for the main background */
+  --text-color: #ffffff;
+  --accent-color: #ff416c; /* Red color */
+  --card-bg: #1e1e1e; /* Slightly lighter dark grey for cards */
+  --input-bg: #2a2a2a;
+  --button-hover: #ff2e58;
+  --header-bg: #000000; /* Pure black for header */
+  --search-section-bg: #000000; /* Pure black for search section */
+  --sidebar-bg: #000000; /* Pure black for sidebar */
+  --sidebar-link-hover: #3a3a3a;
+  --scrollbar-thumb: #000000; /* Pure black thumb */
+  --scrollbar-track: #1a1a1a; /* Very dark grey for track */
+  --dark-red-hover: #8B0000; /* Dark red on hover */
+}
+
+/* Light theme specific variables */
+[data-theme="light"] {
+  --bg-color: #f0f0f0;
+  --text-color: #333333;
+  --card-bg: #ffffff;
+  --input-bg: #e0e0e0;
+  --header-bg: #f5f5f5;
+  --search-section-bg: #f5f5f5;
+  --sidebar-bg: #ffffff;
+  --sidebar-link-hover: #f0f0f0;
+  --scrollbar-thumb: #bbb;
+  --scrollbar-track: #eee;
+  --dark-red-hover: #cc0000; /* Darker red for light theme hover */
+}
+
+/* Body base styles */
+body {
+  margin: 0;
+  padding: 0;
+  /* یہاں گریڈینٹ بیک گراؤنڈ شامل کیا گیا ہے */
+  background: linear-gradient(to right, #2c004f, #4f002c); /* تصویر سے ملتے جلتے رنگوں کا گریڈینٹ */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: #fff0;
+  font-weight: 400;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+  font-size: 17px;
+  text-align: center;
+  color: var(--text-color);
+  box-sizing: border-box;
+  overflow-x: hidden;
+  touch-action: pan-y;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Home page specific background image - REMOVED */
+body.home-page {
+  /* یہ اب مرکزی باڈی گریڈینٹ سے اووررائڈ ہو جائے گا */
+  background: linear-gradient(to right, #2c004f, #4f002c); /* تصویر سے ملتے جلتے رنگوں کا گریڈینٹ */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+}
+
+/* Custom scrollbar styles for WebKit browsers (for body) */
+body::-webkit-scrollbar {
+  width: 12px; /* Wider scrollbar for better visibility */
+}
+body::-webkit-scrollbar-track {
+  background: var(--scrollbar-track); /* Darker track */
+  border-radius: 10px;
+}
+body::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb); /* Black/Dark Grey thumb */
+  border-radius: 10px;
+  border: 3px solid var(--bg-color); /* Border to match background */
+}
+body::-webkit-scrollbar-thumb:hover {
+  background: var(--dark-red-hover); /* Dark Red on hover */
+}
+
+/* Header and search wrapper styles */
+.header-and-search-wrapper {
+  /* یہاں ہیڈر پر بھی گریڈینٹ بیک گراؤنڈ شامل کیا گیا ہے */
+  background: linear-gradient(to right, #2c004f, #4f002c); /* تصویر سے ملتے جلتے رنگوں کا گریڈینٹ */
+  border-bottom: none;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  margin: 0;
+  padding: 0;
+  transition: filter 0.3s ease-in-out, transform 0.3s ease-in-out; /* Add transition for transform */
+}
+
+/* Main header styles */
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px;
+  border-bottom: none;
+  box-shadow: none;
+  margin: 0;
+  background-color: transparent; /* Keep transparent to show header-and-search-wrapper bg */
+}
+
+/* Hamburger menu icon styles */
+.hamburger-menu {
+  width: 30px;
+  height: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 10px;
+  padding-left: 20px;
+  z-index: 1001;
+  transition: opacity 0.3s ease, pointer-events 0.3s ease;
+}
+
+/* Hamburger menu bar styles */
+.hamburger-menu .bar {
+  width: 100%;
+  height: 3px;
+  background-color: var(--text-color);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4); /* Add subtle shadow to bars */
+}
+
+/* Hamburger menu hover effect */
+.hamburger-menu:hover .bar {
+  background-color: var(--accent-color); /* Change color on hover */
+  box-shadow: 0 2px 5px rgba(255, 65, 108, 0.6); /* Add a stronger glow on hover */
+}
+
+
+/* Logo container styles */
+.logo-container {
+  width: 100%;
+  text-align: center;
+  margin: 0 auto;
+  padding-top: 0px;
+}
+.logo-container img {
+  width: 150px;
+  height: 130px;
+  transform: scaleX(3);
+  aspect-ratio: auto 235 / 42;
+  box-sizing: border-box;
+  border: 0;
+  vertical-align: middle;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  /* लोगो पर हॉवर इफेक्ट हटाने के लिए ट्रांजीशन और ट्रांसफॉर्म को हटा दिया गया है */
+  transition: none; /* ट्रांजीशन हटा दिया गया */
+}
+
+.logo-container img:hover {
+  /* हॉवर पर कोई ट्रांसफॉर्म नहीं */
+  transform: scaleX(3); /* मूल ट्रांसफॉर्म को बरकरार रखें */
+}
+
+/* Search section styles */
+.search-section {
+  padding: 0px 20px;
+  /* यहां बैकग्राउंड कलर को हटाकर ट्रांसपेरेंट किया गया है ताकि बॉडी का ग्रेडिएंट दिखे */
+  background-color: transparent; 
+  border-bottom: none;
+  box-shadow: none;
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding-bottom: 10px;
+}
+
+.search-box {
+  width: 100%;
+  max-width: 600px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 12px 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease;
+}
+
+.search-box input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent-color);
+}
+
+/* Main filter buttons container styles */
+.main-filter-buttons-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 15px 20px;
+    /* यहां बैकग्राउंड कलर को हटाकर ट्रांसपेरेंट किया गया है ताकि बॉडी का ग्रेडिएंट दिखे */
+    background-color: transparent; 
+    border-bottom: none;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: filter 0.3s ease-in-out, transform 0.3s ease-in-out; /* Add transition for transform */
+}
+
+/* Main filter button styles */
+.main-filter-button {
+    padding: 10px 20px;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--accent-color);
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: "Alegreya", serif; /* Alegreya font applied */
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.main-filter-button:hover {
+    background-color: var(--button-hover);
+    color: white;
+    transform: translateY(-2px) scale(1.05); /* Combined transform */
+    box-shadow: 0 4px 10px rgba(255, 65, 108, 0.4);
+}
+
+/* Sidebar styles */
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: 0; /* Changed from left to right */
+  height: 100%;
+  width: 250px;
+  background-color: var(--sidebar-bg); /* Use pure black for sidebar */
+  box-shadow: -2px 0 10px rgba(0,0,0,0.5);
+  transform: translateX(100%); /* Initial position: off-screen to the right */
+  transition: transform 0.3s ease-in-out;
+  z-index: 1000;
+  padding-top: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  /* Rounded corners for sidebar */
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+}
+
+.sidebar.active {
+  transform: translateX(0); /* Move into view */
+}
+
+
+/* Sidebar links section styles */
+.sidebar-links-section {
+  padding: 20px;
+  border-bottom: 1px solid #444;
+  margin-bottom: 20px;
+  border-radius: 0;
+}
+
+.sidebar-links-section .sort-select {
+  width: 100%;
+  padding: 10px 15px;
+  border-radius: 8px; /* Added border-radius */
+  border: none;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  font-size: 1.1em;
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+  cursor: pointer;
+  margin-bottom: 15px; /* Increased margin-bottom for spacing */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 20px;
+}
+
+.sidebar-links-section a {
+  display: block;
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: 1.1em;
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+  padding: 10px 15px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease; /* Added transform transition */
+  margin-bottom: 10px; /* Added margin-bottom for spacing between links */
+}
+
+.sidebar-links-section a:hover {
+  background-color: var(--sidebar-link-hover);
+  color: var(--accent-color);
+  transform: scale(1.05); /* Scale on hover */
+}
+
+.sidebar-links-section a:last-child {
+  margin-bottom: 0;
+}
+
+/* Sidebar categories styles */
+.sidebar-categories {
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px; /* Adjusted padding for better visibility */
+  gap: 10px;
+  overflow-y: auto;
+  flex-grow: 1;
+  border-radius: 0;
+}
+
+/* Category buttons within sidebar */
+.sidebar-categories button {
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid var(--accent-color); /* Red border */
+  background-color: var(--accent-color); /* Red background */
+  color: var(--text-color); /* White text */
+  font-size: 1.1em;
+  font-weight: 500;
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  text-align: left; /* Align text to left */
+}
+
+.sidebar-categories button:hover {
+  background-color: var(--sidebar-bg); /* Black background on hover */
+  color: var(--accent-color); /* Red text on hover */
+  border-color: var(--accent-color); /* Red border on hover */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(255, 65, 108, 0.4);
+}
+
+.sidebar-categories button.active {
+    background-color: var(--sidebar-link-hover); /* Active category button background */
+    color: var(--accent-color); /* Active category button text color */
+    border-color: var(--accent-color);
+}
+
+
+/* Custom scrollbar for sidebar categories */
+.sidebar-categories::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sidebar-categories::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+  border-radius: 0;
+}
+
+.sidebar-categories::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb); /* Black/Dark Grey thumb */
+  border-radius: 0;
+  border: 2px solid var(--sidebar-bg);
+}
+
+.sidebar-categories::-webkit-scrollbar-thumb:hover {
+  background: var(--dark-red-hover); /* Dark Red on hover */
+}
+
+/* Overlay styles */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+}
+
+.overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.category-buttons {
+  display: none;
+}
+
+/* Anime grid layout */
+main {
+  transition: filter 0.3s ease-in-out, transform 0.3s ease-in-out; /* Add transition for transform */
+}
+
+.anime-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 25px;
+  padding: 0 20px;
+}
+
+/* Anime card styles */
+.anime-card {
+  background-color: transparent; /* Changed to transparent */
+  padding: 18px;
+  border-radius: 12px;
+  /* box-shadow now always on */
+  box-shadow: 0 5px 15px rgba(255, 65, 108, 0.5), 0 0 10px rgba(255, 65, 108, 0.2) inset; /* Always on red shadow */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  position: relative;
+  padding-bottom: 70px; /* Increased padding-bottom for name and category */
+}
+
+.anime-card:hover {
+  transform: translateY(-8px);
+  /* No change to box-shadow on hover, it's always on */
+}
+
+/* Popular badge styles */
+.popular-badge {
+  background-color: gold;
+  color: black;
+  font-size: 0.8em;
+  padding: 4px 8px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+/* Anime image styles */
+.anime-image {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  min-height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  background-color: #333;
+  border: 1px solid #444;
+}
+
+/* Lazy load shimmer effect for images */
+.anime-image.lazy-load {
+    background-color: #444;
+    background-image: linear-gradient(to right, #444 0%, #555 20%, #444 40%, #444 100%);
+    background-repeat: no-repeat;
+    background-size: 800px 100%;
+    animation: shimmer 1.5s infinite;
+    display: block;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -468px 0;
+    }
+    100% {
+        background-position: 468px 0;
+    }
+}
+
+/* Anime title styles */
+.anime-title-link {
+  font-weight: bold;
+  font-size: 1.1em;
+  margin-bottom: 0; /* Adjusted margin-bottom */
+  color: var(--text-color); /* Set to white */
+  text-decoration: none; /* Remove underline */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%; /* Full width within the card */
+  padding: 5px 0; /* Reduced padding */
+  background-color: transparent; /* Changed to transparent */
+  position: static; /* Changed to static */
+  bottom: auto; /* Removed bottom positioning */
+  left: auto; /* Removed left positioning */
+  box-sizing: border-box; /* Include padding in width */
+  transition: background-color 0.3s ease;
+  display: block; /* Ensure it takes full width */
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.anime-title-link:hover {
+  background-color: transparent; /* No background on hover */
+  color: var(--accent-color); /* Accent color on hover */
+}
+
+
+/* Anime category styles */
+.anime-category {
+  font-size: 0.9em;
+  color: #ffccdd;
+  margin-top: 5px; /* Added margin-top to separate from title */
+  margin-bottom: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+/* General button styles */
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: var(--accent-color);
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 1em;
+  font-weight: bold;
+  margin-top: 10px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  border: none;
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.btn:hover {
+  background-color: var(--button-hover);
+  transform: translateY(-2px) scale(1.05); /* Combined transform */
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* Load more button animation */
+#loadMoreBtn {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+#loadMoreBtn.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Footer styles */
+footer {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 0.9em;
+  color: #888;
+  padding-top: 20px;
+  border-top: 1px solid #333;
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+/* Custom modal overlay styles */
+.custom-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* Slightly more transparent */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  backdrop-filter: blur(5px); /* Blur effect for background */
+  -webkit-backdrop-filter: blur(5px); /* Safari support */
+}
+
+.custom-modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Custom modal content styles */
+.custom-modal-content {
+  background-color: var(--card-bg);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(255, 65, 108, 0.5);
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  color: var(--text-color);
+  transform: translateY(-20px);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  max-height: 80vh;
+  overflow-y: auto;
+  /* Custom scrollbar for modal content */
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: var(--accent-color) var(--input-bg); /* For Firefox */
+}
+
+/* Webkit scrollbar for custom modal content */
+.custom-modal-content::-webkit-scrollbar {
+  width: 10px;
+}
+
+.custom-modal-content::-webkit-scrollbar-track {
+  background: var(--input-bg); /* Darker track for modal */
+  border-radius: 10px;
+}
+
+.custom-modal-content::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb); /* Black/Dark Grey thumb */
+  border-radius: 10px;
+  border: 2px solid var(--card-bg); /* Border to match modal background */
+}
+
+.custom-modal-content::-webkit-scrollbar-thumb:hover {
+  background: var(--dark-red-hover); /* Dark Red on hover */
+}
+
+
+.custom-modal-overlay.active .custom-modal-content {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Specific styles for the Suggest Anime Modal content to match the desired look */
+.custom-modal-content.suggest-anime-content {
+  background-color: #2a2a2a; /* Darker background from the image */
+  padding: 20px; /* Reduced padding for a tighter look */
+  border-radius: 8px; /* Slightly less rounded corners */
+  box-shadow: none; /* No outer shadow for this specific modal */
+  max-width: 500px; /* Increased max-width for better form layout */
+  width: 95%; /* Responsive width */
+  border: 1px solid #3a3a3a; /* Subtle border */
+}
+
+.custom-modal-content h3 {
+  color: var(--text-color); /* Title color matching text */
+  margin-bottom: 15px; /* Adjusted margin */
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.custom-modal-content p {
+  margin-bottom: 15px; /* Adjusted margin */
+  line-height: 1.4; /* Slightly tighter line height */
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.custom-modal-content .modal-buttons button {
+  padding: 12px 25px; /* Larger buttons */
+  border-radius: 6px; /* Slightly less rounded */
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 0 8px;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+/* Submit Suggestion Button */
+.custom-modal-content .modal-ok-btn {
+  background-color: #007bff; /* Blue color from reference image */
+  color: white;
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4); /* Blue glow */
+}
+
+.custom-modal-content .modal-ok-btn:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 15px rgba(0, 123, 255, 0.6);
+}
+
+/* Cancel Button */
+.custom-modal-content .modal-cancel-btn {
+  background-color: #6c757d; /* Grey color */
+  color: white;
+  box-shadow: 0 4px 10px rgba(108, 117, 125, 0.4); /* Grey glow */
+}
+
+.custom-modal-content .modal-cancel-btn:hover {
+  background-color: #5a6268;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 15px rgba(108, 117, 125, 0.6);
+}
+
+
+.action-buttons-container {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    margin: 20px 20px;
+    flex-wrap: wrap;
+    transition: filter 0.3s ease-in-out, transform 0.3s ease-in-out; /* Add transition for transform */
+}
+
+/* Styles for form groups within modals (like Suggest Anime Modal) */
+.custom-modal-content .form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.custom-modal-content .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--text-color);
+    font-size: 0.95em; /* Slightly larger font for labels */
+    font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.custom-modal-content .form-group input[type="text"],
+.custom-modal-content .form-group input[type="url"],
+.custom-modal-content .form-group textarea {
+    width: 100%; /* Full width */
+    padding: 12px 15px; /* Increased padding */
+    border: none; /* No border */
+    border-bottom: 1px solid #555; /* Subtle bottom border */
+    border-radius: 8px; /* Rounded corners */
+    background-color: #2a2a2a; /* Dark background */
+    color: #ffffff; /* White text */
+    font-size: 1em;
+    box-sizing: border-box; /* Include padding in width */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+.custom-modal-content .form-group input[type="text"]:focus,
+.custom-modal-content .form-group input[type="url"]:focus,
+.custom-modal-content .form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent-color); /* Accent color on focus */
+    box-shadow: 0 0 0 2px rgba(255, 65, 108, 0.5); /* Subtle glow on focus */
+}
+
+.custom-modal-content .form-group textarea {
+    resize: vertical; /* Allow vertical resizing */
+    min-height: 80px;
+}
+
+.custom-modal-content .image-url-guidance {
+    font-size: 0.75em;
+    color: #aaa;
+    margin-top: 5px;
+    font-family: "Alegreya", serif; /* Alegreya font applied */
+}
+
+/* Laptop/Tablet (Medium Screens) adjustments */
+@media screen and (max-width: 1024px) {
+  body {
+    font-size: 16px; /* Slightly smaller base font size */
+  }
+
+  .main-header {
+    padding: 0px; /* Keep padding consistent or slightly reduce */
+  }
+  .logo-container img {
+    width: 130px; /* Slightly smaller logo */
+    height: 110px;
+    transform: scaleX(2.8); /* Adjusted scale */
+  }
+  .logo-container img:hover {
+    /* हॉवर पर कोई ट्रांसफॉर्म नहीं */
+    transform: scaleX(2.8); /* मूल ट्रांसफॉर्म को बरकरार रखें */
+  }
+
+  .search-section {
+    padding: 0px 15px; /* Reduced padding */
+    padding-bottom: 8px;
+  }
+  .search-box input {
+    padding: 10px 12px; /* Reduced padding */
+    font-size: 15px; /* Reduced font size */
+  }
+
+  .main-filter-buttons-container {
+    padding: 12px 15px; /* Reduced padding */
+    gap: 12px; /* Reduced gap */
+  }
+  .main-filter-button {
+    padding: 9px 18px; /* Reduced padding */
+    font-size: 0.95em; /* Reduced font size */
+  }
+
+  .sidebar {
+    width: 220px; /* Slightly reduced sidebar width */
+    padding-top: 15px;
+  }
+  .sidebar-links-section {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  .sidebar-links-section .sort-select {
+    padding: 9px 12px;
+    font-size: 1.05em;
+    margin-bottom: 12px;
+  }
+  .sidebar-links-section a {
+    padding: 9px 12px;
+    font-size: 1.05em;
+    margin-bottom: 8px;
+  }
+  .sidebar-categories {
+    padding: 0 15px;
+    gap: 8px;
+  }
+  .sidebar-categories button {
+    padding: 9px 12px;
+    font-size: 1.05em;
+  }
+
+  .anime-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Adjust minmax for more columns */
+    gap: 20px; /* Slightly reduced gap */
+    padding: 0 15px; /* Reduced padding */
+  }
+  .anime-card {
+    padding: 15px; /* Reduced padding */
+    border-radius: 10px; /* Slightly smaller border radius */
+    padding-bottom: 60px; /* Adjusted padding-bottom for name and category */
+  }
+  .anime-category {
+    font-size: 0.85em; /* Slightly reduced font size */
+  }
+  .btn {
+    padding: 9px 18px; /* Reduced padding */
+    font-size: 0.95em; /* Reduced font size */
+  }
+
+  .action-buttons-container {
+    padding: 15px;
+    margin: 18px 15px;
+  }
+
+  footer {
+    margin-top: 40px; /* Reduced margin */
+    font-size: 0.85em; /* Reduced font size */
+    padding-top: 15px;
+  }
+
+  /* Modals adjustments */
+  .custom-modal-content {
+    padding: 25px; /* Reduced padding */
+    max-width: 350px; /* Reduced max-width */
+  }
+  .custom-modal-content h3 {
+    font-size: 1.3em; /* Reduced font size */
+    margin-bottom: 15px;
+  }
+  .custom-modal-content p {
+    font-size: 1em; /* Reduced font size */
+    margin-bottom: 20px;
+  }
+  .custom-modal-content .form-group input,
+  .custom-modal-content .form-group textarea {
+    padding: 10px 12px;
+    font-size: 0.95em;
+  }
+  .custom-modal-content .modal-buttons button {
+    padding: 10px 20px;
+    font-size: 0.95em;
+    margin: 0 6px;
+  }
+  .custom-modal-content.suggest-anime-content {
+    padding: 18px;
+    max-width: 450px;
+  }
+}
+
+
+@media screen and (max-width: 768px) {
+  /* General adjustments for smaller screens */
+  body {
+    font-size: 13px; /* Further reduced base font size */
+  }
+
+  .main-header {
+    padding: 3px; /* Further reduced padding */
+  }
+  .logo-container {
+    /* Added margin-left to shift logo slightly to the left */
+    margin-left: -10px; /* Adjust as needed for desired shift */
+  }
+  .logo-container img {
+    width: 110px; /* Further reduced logo width */
+    height: 90px; /* Further reduced logo height */
+    transform: scaleX(2.3); /* Adjusted scale for smaller width */
+  }
+  .logo-container img:hover {
+    /* हॉवर पर कोई ट्रांसफॉर्म नहीं */
+    transform: scaleX(2.3); /* मूल ट्रांसफॉर्म को बरकरार रखें */
+  }
+
+  .search-section {
+    padding: 3px 8px; /* Further reduced padding */
+    padding-bottom: 3px; /* Further reduced padding */
+  }
+  .search-box input {
+    width: calc(95% - 10px); /* 5% width reduction */
+    padding: 7px 9px; /* Further reduced padding */
+    font-size: 13px; /* Further reduced font size */
+  }
+
+  .main-filter-buttons-container {
+    padding: 8px; /* Further reduced padding */
+    gap: 6px; /* Further reduced gap */
+  }
+  .main-filter-button {
+    padding: 7px 12px; /* Further reduced padding */
+    font-size: 0.85em; /* Further reduced font size */
+  }
+
+  .sidebar {
+    width: 180px; /* Further reduced sidebar width */
+    padding-top: 8px; /* Further reduced padding */
+  }
+  .sidebar-links-section {
+    padding: 8px; /* Further reduced padding */
+    margin-bottom: 8px; /* Further reduced margin */
+  }
+  .sidebar-links-section .sort-select {
+    padding: 7px 9px;
+    font-size: 0.9em; /* Further reduced font size */
+    margin-bottom: 12px; /* Adjusted margin */
+  }
+  .sidebar-links-section a {
+    padding: 7px 9px; /* Further reduced padding */
+    font-size: 0.9em; /* Further reduced font size */
+    margin-bottom: 4px; /* Further reduced margin */
+  }
+  .sidebar-categories {
+    padding: 0 8px; /* Further reduced padding */
+    gap: 4px; /* Further reduced gap */
+  }
+  .sidebar-categories button {
+    padding: 7px 9px;
+    font-size: 0.9em;
+  }
+
+  .anime-grid {
+    grid-template-columns: 1fr; /* Single column layout */
+    gap: 12px; /* Further reduced gap */
+    padding: 0 8px; /* Further reduced padding */
+  }
+  .anime-card {
+    padding: 8px; /* Further reduced padding */
+    border-radius: 6px; /* Slightly smaller border radius */
+    padding-bottom: 50px; /* Adjusted padding-bottom for name and category */
+  }
+  .anime-category {
+    font-size: 0.75em; /* Further reduced font size */
+  }
+  .btn {
+    padding: 7px 12px; /* Further reduced padding */
+    font-size: 0.85em; /* Further reduced font size */
+  }
+
+  .action-buttons-container {
+    justify-content: center;
+    padding: 8px; /* Further reduced padding */
+    margin: 12px 8px; /* Further reduced margin */
+  }
+
+  footer {
+    margin-top: 25px; /* Further reduced margin */
+    font-size: 0.75em; /* Further reduced font size */
+    padding-top: 8px; /* Further reduced padding */
+  }
+
+  /* Modals adjustments */
+  .custom-modal-content {
+    padding: 12px; /* Further reduced padding */
+    max-width: 280px; /* Further reduced max-width */
+  }
+  .custom-modal-content h3 {
+    font-size: 1.1em; /* Further reduced font size */
+    margin-bottom: 8px; /* Further reduced margin */
+  }
+  .custom-modal-content p {
+    font-size: 0.85em; /* Further reduced font size */
+    margin-bottom: 8px; /* Further reduced margin */
+  }
+  .custom-modal-content .form-group input,
+  .custom-modal-content .form-group textarea {
+    padding: 8px 10px; /* Further reduced padding */
+    font-size: 0.85em; /* Further reduced font size */
+  }
+  .custom-modal-content .modal-buttons button {
+    padding: 8px 15px;
+    font-size: 0.85em;
+    margin: 0 4px;
+  }
+  .custom-modal-content.suggest-anime-content {
+    padding: 12px; /* Further reduced padding */
+    max-width: 320px; /* Adjusted max-width */
+  }
+}
+
+/* Preloader Styles - Added to Home.css */
+#preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--header-bg); /* Using a theme variable */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Ensure it's on top of everything */
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+  flex-direction: column; /* For loading text and spinner */
+}
+
+#preloader.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid var(--accent-color); /* Using theme accent color */
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  color: var(--text-color); /* Using theme text color */
+  font-family: "Alegreya", serif; /* Alegreya font applied */
+  font-size: 1.2em;
+}
+
+/* Ensure initial content is hidden until preloader is gone */
+body:not(.loaded) .header-and-search-wrapper,
+body:not(.loaded) .main-filter-buttons-container,
+body:not(.loaded) main,
+body:not(.loaded) .action-buttons-container,
+body:not(.loaded) footer {
+    display: none;
+}
+
+/* Styles for blurring and shining main content when sidebar is active */
+body.sidebar-active .header-and-search-wrapper,
+body.sidebar-active .main-filter-buttons-container,
+body.sidebar-active main,
+body.sidebar-active .action-buttons-container,
+body.sidebar-active footer {
+    filter: blur(5px) brightness(0.7); /* Blur and darken */
+    transition: filter 0.3s ease-in-out, transform 0.3s ease-in-out; /* Smooth transition */
+    pointer-events: none; /* Disable interactions on blurred content */
+    transform: translateX(-250px); /* Shift content to the left when sidebar is open on the right */
+}
