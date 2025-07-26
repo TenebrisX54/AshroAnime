@@ -351,16 +351,6 @@ def add_reply_to_comment(comment_id):
             {"$push": {"replies": reply_data}}
         )
         
-        if result.modified_count == 1:
-            return jsonify({"message": "Reply added successfully", "reply_id": str(reply_data["_id"])}), 201
-        return jsonify({"error": "Comment or reply not found"}), 404
-    except Exception as e:
-        print(f"Error adding reply: {e}")
-        return jsonify({"error": "Failed to add reply", "details": str(e)}), 500
-
-if __name__ == "__main__":
-    # This configuration is for local development.
-    # The app will run on http://127.0.0.1:5000
-    # For deployment, you'll use a production-ready WSGI server like Gunicorn
-    # and configure it according to your hosting provider's instructions.
-    app.run(host='127.0.0.1', port=5000, debug=True)
+        if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))  # Use PORT from environment or default to 5000
+    app.run(host="0.0.0.0", port=port)
